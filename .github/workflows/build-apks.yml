@@ -20,9 +20,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Android SDK
-        uses: android-actions/setup-android@v3
-
+      - name: Prepare Android SDK
+        run: |
+          export ANDROID_SDK_ROOT="/usr/local/lib/android/sdk"
+          SDKMANAGER="$(find "$ANDROID_SDK_ROOT/cmdline-tools" -type f -name sdkmanager | sort | tail -1)"
+          echo "Using sdkmanager: $SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
       - name: Install Android 16 SDK
         run: |
           yes | sdkmanager --licenses >/dev/null || true
