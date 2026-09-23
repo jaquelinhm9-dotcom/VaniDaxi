@@ -104,3 +104,18 @@ jobs:
           path: dist/*.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish permanent download links
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="android-${{ github.run_number }}"
+          gh release create "$TAG" \
+            dist/VaniDaxi.apk \
+            dist/VaniReparte.apk \
+            dist/VaniDaxi-Panel.apk \
+            --title "VaniDaxi Apps Android ${{ github.run_number }}" \
+            --notes "APK descargables de VaniDaxi, VaniReparte y Panel Principal." \
+            --latest=false
