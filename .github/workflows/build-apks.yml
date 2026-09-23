@@ -2,8 +2,7 @@ name: Build VaniDaxi APKs
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -20,22 +19,15 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android 16 SDK
+      - name: Prepare Android SDK
         shell: bash
         run: |
           set -euo pipefail
-          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
-          if [ ! -x "$SDKMANAGER" ]; then
-            SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort | tail -1)"
-          fi
-          echo "Using $SDKMANAGER"
-          yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-          echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          command -v sdkmanager
+          command -v adb || true
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
 
       - name: Gradle 9.6
         uses: gradle/actions/setup-gradle@v4
@@ -49,14 +41,17 @@ jobs:
         shell: bash
         run: |
           set +e
-          mkdir -p diagnostics dist
+          mkdir -p diagnostics
           {
-            echo "=== ENV ==="
+            echo "=== Java ==="
             java -version
+            echo "=== Gradle ==="
             gradle --version
+            echo "=== SDK ==="
             echo "ANDROID_HOME=$ANDROID_HOME"
-            echo "=== TREE ==="
-            find build/android -maxdepth 4 -type f | sort
+            sdkmanager --list_installed | head -80
+            echo "=== Generated files ==="
+            find build/android -maxdepth 5 -type f | sort
             echo "=== VaniDaxi ==="
             gradle --no-daemon --stacktrace -p build/android/VaniDaxi assembleDebug
             E1=$?
@@ -69,10 +64,18 @@ jobs:
             gradle --no-daemon --stacktrace -p build/android/Panel-Principal assembleDebug
             E3=$?
             echo "Panel exit=$E3"
-            echo "=== APK FILES ==="
             find build/android -type f -name "*.apk" -print
             exit $((E1 || E2 || E3))
           } 2>&1 | tee diagnostics/build.log
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VaniDaxi-build-diagnostics
+          path: diagnostics/build.log
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Collect APKs
         if: success()
@@ -84,15 +87,6 @@ jobs:
           cp build/android/Panel-Principal/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi-Panel.apk
           sha256sum dist/*.apk
           ls -lh dist
-
-      - name: Upload diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: VaniDaxi-build-diagnostics
-          path: diagnostics/build.log
-          if-no-files-found: warn
-          retention-days: 7
 
       - name: Upload three APKs
         if: success()
