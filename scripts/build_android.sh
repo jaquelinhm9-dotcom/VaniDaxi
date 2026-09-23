@@ -65,6 +65,8 @@ EOF
   cat > "$dir/app/src/main/AndroidManifest.xml" <<EOF
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
   <application
     android:allowBackup="false"
     android:usesCleartextTraffic="false"
@@ -126,6 +128,8 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.GeolocationPermissions;
+import android.content.pm.PackageManager;
 
 public class MainActivity extends Activity {
   private WebView web;
@@ -143,6 +147,7 @@ public class MainActivity extends Activity {
     settings.setDatabaseEnabled(true);
     settings.setAllowFileAccess(true);
     settings.setAllowContentAccess(true);
+    settings.setGeolocationEnabled(true);
     settings.setJavaScriptCanOpenWindowsAutomatically(true);
     settings.setSupportMultipleWindows(false);
     CookieManager.getInstance().setAcceptCookie(true);
@@ -159,7 +164,17 @@ public class MainActivity extends Activity {
         handler.cancel();
       }
     });
-    web.setWebChromeClient(new WebChromeClient());
+    web.setWebChromeClient(new WebChromeClient() {
+      @Override public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+        if (android.os.Build.VERSION.SDK_INT >= 23 && checkSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
+          requestPermissions(new String[]{"android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION"}, 9001);
+        }
+        callback.invoke(origin, true, false);
+      }
+    });
+    if (android.os.Build.VERSION.SDK_INT >= 23 && checkSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
+      requestPermissions(new String[]{"android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION"}, 9001);
+    }
     usingRemote = true;
     web.loadUrl("$remote_url?v=20260923-2");
     setContentView(web);
