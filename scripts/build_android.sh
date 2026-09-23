@@ -118,7 +118,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.webkit.CookieManager;
-import android.net.http.SslErrorHandler;
+import android.webkit.SslErrorHandler;
 import android.net.http.SslError;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
