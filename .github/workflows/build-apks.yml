@@ -149,7 +149,30 @@ jobs:
               --latest
           fi
 
+      - name: Upload APKs to free direct-download host
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          VANI=$(curl -fsS -F "reqtype=fileupload" -F "fileToUpload=@dist/VaniDaxi.apk" https://catbox.moe/user/api.php)
+          REPART=$(curl -fsS -F "reqtype=fileupload" -F "fileToUpload=@dist/VaniReparte.apk" https://catbox.moe/user/api.php)
+          PANEL=$(curl -fsS -F "reqtype=fileupload" -F "fileToUpload=@dist/VaniDaxi-Panel.apk" https://catbox.moe/user/api.php)
+          echo "VANI_URL=$VANI" >> "$GITHUB_ENV"
+          echo "REPART_URL=$REPART" >> "$GITHUB_ENV"
+          echo "PANEL_URL=$PANEL" >> "$GITHUB_ENV"
+          echo "VaniDaxi=$VANI"
+          echo "VaniReparte=$REPART"
+          echo "Panel=$PANEL"
+
       - name: Show permanent download URL
+        if: success()
+        run: |
+          echo "VaniDaxi: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi-Actualizada.apk"
+          echo "VaniReparte: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniReparte-Actualizada.apk"
+          echo "Panel: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi-Panel-Actualizada.apk"
+          echo "Catbox VaniDaxi: ${VANI_URL}"
+          echo "Catbox VaniReparte: ${REPART_URL}"
+          echo "Catbox Panel: ${PANEL_URL}"
         if: success()
         run: |
           echo "VaniDaxi: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi-Actualizada.apk"
