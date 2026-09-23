@@ -42,9 +42,9 @@ jobs:
           cp web/VaniReparte/index.html web/VaniReparte/app-config.js web/VaniReparte/supabase-client.js site/apps/VaniReparte/
           cp web/Panel-Principal/index.html web/Panel-Principal/app-config.js web/Panel-Principal/supabase-client.js site/apps/Panel-Principal/
 
-          cp downloads/VaniDaxi-Actualizada.apk site/downloads/VaniDaxi-Actualizada.apk
-          cp downloads/VaniReparte-Actualizada.apk site/downloads/VaniReparte-Actualizada.apk
-          cp downloads/VaniDaxi-Panel-Actualizada.apk site/downloads/VaniDaxi-Panel-Actualizada.apk
+          cp downloads/VaniDaxi-2.0.apk site/downloads/VaniDaxi-2.0.apk
+          cp downloads/VaniReparte-2.0.apk site/downloads/VaniReparte-2.0.apk
+          cp downloads/VaniDaxi-Panel-2.0.apk site/downloads/VaniDaxi-Panel-2.0.apk
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
