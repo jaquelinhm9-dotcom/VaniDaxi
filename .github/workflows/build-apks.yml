@@ -112,17 +112,24 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Publish permanent download release
+      - name: Publish permanent APK files
         if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
           set -euo pipefail
-          TAG="android-${{ github.run_number }}"
-          gh release create "$TAG" \
-            dist/VaniDaxi.apk \
-            dist/VaniReparte.apk \
-            dist/VaniDaxi-Panel.apk \
-            --title "VaniDaxi Apps Android ${{ github.run_number }}" \
-            --notes "APK descargables de VaniDaxi, VaniReparte y Panel Principal." \
-            --latest=false
+          mkdir -p downloads
+          cp dist/VaniDaxi.apk downloads/VaniDaxi.apk
+          cp dist/VaniReparte.apk downloads/VaniReparte.apk
+          cp dist/VaniDaxi-Panel.apk downloads/VaniDaxi-Panel.apk
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-Panel.apk
+          git commit -m "Publicar APKs Android"
+          git push origin HEAD:main
+
+      - name: Show permanent download URL
+        if: success()
+        run: |
+          echo "VaniDaxi: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi.apk"
+          echo "VaniReparte: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniReparte.apk"
+          echo "Panel: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi-Panel.apk"
