@@ -1,0 +1,48 @@
+name: Publicar descargas VaniDaxi
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf site
+          mkdir -p site/downloads
+          cp index.html site/index.html
+          cp downloads/VaniDaxi-Actualizada.apk site/downloads/VaniDaxi-Actualizada.apk
+          cp downloads/VaniReparte-Actualizada.apk site/downloads/VaniReparte-Actualizada.apk
+          cp downloads/VaniDaxi-Panel-Actualizada.apk site/downloads/VaniDaxi-Panel-Actualizada.apk
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
