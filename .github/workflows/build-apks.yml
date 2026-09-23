@@ -173,8 +173,3 @@ jobs:
           echo "Catbox VaniDaxi: ${VANI_URL}"
           echo "Catbox VaniReparte: ${REPART_URL}"
           echo "Catbox Panel: ${PANEL_URL}"
-        if: success()
-        run: |
-          echo "VaniDaxi: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi-Actualizada.apk"
-          echo "VaniReparte: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniReparte-Actualizada.apk"
-          echo "Panel: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi-Panel-Actualizada.apk"
