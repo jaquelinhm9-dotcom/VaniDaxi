@@ -1,0 +1,1 @@
+window.supabase=window.supabase||null;window.VaniDaxiAPI={health:()=>Promise.resolve(true),getSession:()=>null,signOut:()=>Promise.resolve()};
