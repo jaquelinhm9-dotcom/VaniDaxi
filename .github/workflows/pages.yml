@@ -33,7 +33,15 @@ jobs:
           set -euo pipefail
           rm -rf site
           mkdir -p site/downloads
+          mkdir -p site/apps/VaniDaxi
+          mkdir -p site/apps/VaniReparte
+          mkdir -p site/apps/Panel-Principal
+
           cp index.html site/index.html
+          cp web/VaniDaxi/index.html web/VaniDaxi/app-config.js web/VaniDaxi/supabase-client.js site/apps/VaniDaxi/
+          cp web/VaniReparte/index.html web/VaniReparte/app-config.js web/VaniReparte/supabase-client.js site/apps/VaniReparte/
+          cp web/Panel-Principal/index.html web/Panel-Principal/app-config.js web/Panel-Principal/supabase-client.js site/apps/Panel-Principal/
+
           cp downloads/VaniDaxi-Actualizada.apk site/downloads/VaniDaxi-Actualizada.apk
           cp downloads/VaniReparte-Actualizada.apk site/downloads/VaniReparte-Actualizada.apk
           cp downloads/VaniDaxi-Panel-Actualizada.apk site/downloads/VaniDaxi-Panel-Actualizada.apk
