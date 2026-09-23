@@ -154,9 +154,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          VANI=$(curl -fsS -F "reqtype=fileupload" -F "fileToUpload=@dist/VaniDaxi.apk" https://catbox.moe/user/api.php)
-          REPART=$(curl -fsS -F "reqtype=fileupload" -F "fileToUpload=@dist/VaniReparte.apk" https://catbox.moe/user/api.php)
-          PANEL=$(curl -fsS -F "reqtype=fileupload" -F "fileToUpload=@dist/VaniDaxi-Panel.apk" https://catbox.moe/user/api.php)
+          curl -fsS -F 'files[]=@dist/VaniDaxi.apk' https://uguu.se/upload -o uguu_vani.json
+          curl -fsS -F 'files[]=@dist/VaniReparte.apk' https://uguu.se/upload -o uguu_reparte.json
+          curl -fsS -F 'files[]=@dist/VaniDaxi-Panel.apk' https://uguu.se/upload -o uguu_panel.json
+          VANI=$(python -c "import json; print(json.load(open('uguu_vani.json'))['files'][0]['url'])")
+          REPART=$(python -c "import json; print(json.load(open('uguu_reparte.json'))['files'][0]['url'])")
+          PANEL=$(python -c "import json; print(json.load(open('uguu_panel.json'))['files'][0]['url'])")
           echo "VANI_URL=$VANI" >> "$GITHUB_ENV"
           echo "REPART_URL=$REPART" >> "$GITHUB_ENV"
           echo "PANEL_URL=$PANEL" >> "$GITHUB_ENV"
