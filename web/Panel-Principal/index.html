@@ -68,7 +68,7 @@ button,input,select{font:inherit}button{cursor:pointer}.app{min-height:100vh;dis
     <div class="topActions">
       <button class="iconBtn" onclick="notify('Tienes 5 notificaciones nuevas')">🔔<span class="notifDot"></span></button>
       <button class="iconBtn" onclick="notify('Centro de ayuda abierto')">?</button>
-      <div class="profile"><div class="avatar">A</div><div><b>Administradora principal</b><small>Acceso propietario</small></div></div>
+      <div class="profile"><div class="avatar">A</div><div><b> principal</b><small>Acceso propietario</small></div></div>
     </div>
   </div>
 
@@ -230,19 +230,9 @@ document.querySelectorAll('[data-page]').forEach(x=>x.addEventListener('click',(
 function notify(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
 function closeModal(){document.getElementById('overlay').classList.remove('show')}
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal()});
-function openCase(ref){document.getElementById('overlay').classList.add('show');document.getElementById('modal').innerHTML=`
-<h3>Caso ${ref}</h3><p class="muted">Vista administrativa de demostración con pedido, usuario, entrega e incidencia relacionados.</p>
-<div class="grid g2"><div class="card"><b>Referencia</b><div style="margin-top:5px">${ref}</div></div><div class="card"><b>Estado</b><div style="margin-top:5px"><span class="badge orange">En revisión</span></div></div><div class="card"><b>Usuario</b><div style="margin-top:5px">María López</div></div><div class="card"><b>Repartidor</b><div style="margin-top:5px">R-104 · VaniReparte</div></div></div>
-<div class="card" style="margin-top:12px"><b>Historial</b><div style="margin-top:10px"><div class="rule"><span>21:52 · Pedido preparado</span><span class="badge">Evento</span></div><div class="rule"><span>22:02 · Recibido en VaniDaxi</span><span class="badge">Evento</span></div><div class="rule"><span>22:14 · Marcado como entregado</span><span class="badge">Evento</span></div><div class="rule"><span>22:16 · Reporte creado</span><span class="badge red">Incidencia</span></div></div></div>
-<div class="modalFoot"><button class="btn alt" onclick="closeModal()">Cerrar</button><button class="btn" onclick="notify('Caso asignado a investigación');closeModal()">Asignar</button></div>`}
-function openEmergency(){document.getElementById('overlay').classList.add('show');document.getElementById('modal').innerHTML=`
-<h3 style="color:var(--red)">🚨 Incidencia prioritaria</h3><p class="muted">Caso de demostración que requiere intervención humana.</p>
-<div class="alertItem urgent"><span class="signal"></span><div class="alertMain"><b>INC-1042 · Seguridad</b><span>Pedido #VD-5821 · Repartidor R-104</span></div></div>
-<div class="modalFoot"><button class="btn alt" onclick="closeModal()">Cerrar</button><button class="btn red" onclick="notify('Caso marcado como prioridad máxima');closeModal()">Prioridad máxima</button></div>`}
-function openAuto(){document.getElementById('overlay').classList.add('show');document.getElementById('modal').innerHTML=`
-<h3>Consulta resuelta automáticamente</h3><p class="muted">Ejemplo de atención sin intervención humana.</p>
-<div class="bubble user" style="max-width:100%">¿Cómo puedo solicitar una devolución?</div><div class="bubble bot" style="max-width:100%;margin-top:8px">Puedes iniciar la devolución desde el pedido, siempre que cumpla con las condiciones aplicables.</div>
-<div class="modalFoot"><button class="btn alt" onclick="closeModal()">Cerrar</button><button class="btn" onclick="notify('Caso escalado al administrador');closeModal()">Escalar</button></div>`}
+function openCase(ref){document.getElementById('overlay').classList.add('show');document.getElementById('modal').innerHTML="<h3>Caso</h3><p class='muted'>No hay casos registrados. La vista detallada aparecerá cuando exista una incidencia real.</p><div class='modalFoot'><button class='btn alt' onclick='closeModal()'>Cerrar</button></div>"}
+function openEmergency(){document.getElementById('overlay').classList.add('show');document.getElementById('modal').innerHTML="<h3>Incidencia prioritaria</h3><p class='muted'>No hay incidencias registradas actualmente.</p><div class='modalFoot'><button class='btn alt' onclick='closeModal()'>Cerrar</button></div>"}
+function openAuto(){document.getElementById('overlay').classList.add('show');document.getElementById('modal').innerHTML="<h3>Atención automática</h3><p class='muted'>No hay conversaciones registradas actualmente.</p><div class='modalFoot'><button class='btn alt' onclick='closeModal()'>Cerrar</button></div>"}
 function sendReply(){let i=document.getElementById('reply');if(!i.value.trim())return;let m=document.getElementById('messages');let d=document.createElement('div');d.className='bubble admin';d.textContent=i.value.trim();m.appendChild(d);i.value='';notify('Respuesta enviada');m.scrollTop=m.scrollHeight}
 document.getElementById('reply').addEventListener('keydown',e=>{if(e.key==='Enter')sendReply()});
 </script>
