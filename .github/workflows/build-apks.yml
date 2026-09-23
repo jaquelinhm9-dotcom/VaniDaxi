@@ -3,6 +3,8 @@ name: Build VaniDaxi APKs
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'downloads/**'
   workflow_dispatch:
 
 jobs:
@@ -105,17 +107,23 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Publish permanent download links
+      - name: Publish permanent APK files
         if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
           set -euo pipefail
-          TAG="android-${{ github.run_number }}"
-          gh release create "$TAG" \
-            dist/VaniDaxi.apk \
-            dist/VaniReparte.apk \
-            dist/VaniDaxi-Panel.apk \
-            --title "VaniDaxi Apps Android ${{ github.run_number }}" \
-            --notes "APK descargables de VaniDaxi, VaniReparte y Panel Principal." \
-            --latest=false
+          mkdir -p downloads
+          cp dist/VaniDaxi.apk downloads/VaniDaxi.apk
+          cp dist/VaniReparte.apk downloads/VaniReparte.apk
+          cp dist/VaniDaxi-Panel.apk downloads/VaniDaxi-Panel.apk
+          cp dist/VaniDaxi.apk downloads/VaniDaxi.apk.tmp
+          rm downloads/VaniDaxi.apk.tmp
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-Panel.apk
+          if git diff --cached --quiet; then
+            echo "Los APK ya estaban publicados y no cambiaron."
+          else
+            git commit -m "Publicar APKs Android"
+            git push origin HEAD:main
+          fi
