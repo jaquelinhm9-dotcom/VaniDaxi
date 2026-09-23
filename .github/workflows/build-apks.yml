@@ -149,27 +149,9 @@ jobs:
               --latest
           fi
 
-      - name: Upload APKs to free direct-download host
-        if: success()
-        shell: bash
-        run: |
-          set -euo pipefail
-          VANI=$(curl -fsS -F 'file=@dist/VaniDaxi.apk' -F 'expires=0' https://0x0.st)
-          REPART=$(curl -fsS -F 'file=@dist/VaniReparte.apk' -F 'expires=0' https://0x0.st)
-          PANEL=$(curl -fsS -F 'file=@dist/VaniDaxi-Panel.apk' -F 'expires=0' https://0x0.st)
-          test -n "$VANI"
-          test -n "$REPART"
-          test -n "$PANEL"
-          echo "VANI_URL=$VANI" >> "$GITHUB_ENV"
-          echo "REPART_URL=$REPART" >> "$GITHUB_ENV"
-          echo "PANEL_URL=$PANEL" >> "$GITHUB_ENV"
-          echo "VaniDaxi=$VANI"
-          echo "VaniReparte=$REPART"
-          echo "Panel=$PANEL"
-
       - name: Show permanent download URL
         if: success()
         run: |
-          echo "VaniDaxi: ${VANI_URL}"
-          echo "VaniReparte: ${REPART_URL}"
-          echo "Panel: ${PANEL_URL}"
+          echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-Actualizada.apk"
+          echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniReparte-Actualizada.apk"
+          echo "Panel: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-Panel-Actualizada.apk"
