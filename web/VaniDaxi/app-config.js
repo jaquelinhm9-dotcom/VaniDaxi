@@ -1,0 +1,1 @@
+window.VANIDAXI_CONFIG={SUPABASE_URL:"https://oycwqpqoxgohzqivclzd.supabase.co",SUPABASE_PUBLISHABLE_KEY:"sb_publishable_OIoqR1IOg5t3BIQR7g6_0w_1KWzgpYj",APP_NAME:"VaniDaxi"};
