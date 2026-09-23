@@ -121,9 +121,12 @@ jobs:
           cp dist/VaniDaxi.apk downloads/VaniDaxi.apk
           cp dist/VaniReparte.apk downloads/VaniReparte.apk
           cp dist/VaniDaxi-Panel.apk downloads/VaniDaxi-Panel.apk
+          cp dist/VaniDaxi.apk downloads/VaniDaxi-Actualizada.apk
+          cp dist/VaniReparte.apk downloads/VaniReparte-Actualizada.apk
+          cp dist/VaniDaxi-Panel.apk downloads/VaniDaxi-Panel-Actualizada.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-Panel.apk
+          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-Panel.apk downloads/VaniDaxi-Actualizada.apk downloads/VaniReparte-Actualizada.apk downloads/VaniDaxi-Panel-Actualizada.apk
           git commit -m "Publicar APKs Android"
           git push origin HEAD:main
 
@@ -135,9 +138,11 @@ jobs:
         run: |
           set -euo pipefail
           if gh release view v1.0.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload v1.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk dist/VaniDaxi-Panel.apk --clobber --repo "$GITHUB_REPOSITORY"
+            gh release upload v1.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk dist/VaniDaxi-Panel.apk \
+              downloads/VaniDaxi-Actualizada.apk downloads/VaniReparte-Actualizada.apk downloads/VaniDaxi-Panel-Actualizada.apk --clobber --repo "$GITHUB_REPOSITORY"
           else
             gh release create v1.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk dist/VaniDaxi-Panel.apk \
+              downloads/VaniDaxi-Actualizada.apk downloads/VaniReparte-Actualizada.apk downloads/VaniDaxi-Panel-Actualizada.apk \
               --repo "$GITHUB_REPOSITORY" \
               --title "VaniDaxi APKs" \
               --notes "Instaladores APK de VaniDaxi, VaniReparte y VaniDaxi Panel." \
@@ -147,6 +152,6 @@ jobs:
       - name: Show permanent download URL
         if: success()
         run: |
-          echo "VaniDaxi: https://github.com/jaquelinhm9-dotcom/VaniDaxi/releases/latest/download/VaniDaxi.apk"
-          echo "VaniReparte: https://github.com/jaquelinhm9-dotcom/VaniDaxi/releases/latest/download/VaniReparte.apk"
-          echo "Panel: https://github.com/jaquelinhm9-dotcom/VaniDaxi/releases/latest/download/VaniDaxi-Panel.apk"
+          echo "VaniDaxi: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi-Actualizada.apk"
+          echo "VaniReparte: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniReparte-Actualizada.apk"
+          echo "Panel: https://raw.githubusercontent.com/jaquelinhm9-dotcom/VaniDaxi/main/downloads/VaniDaxi-Panel-Actualizada.apk"
