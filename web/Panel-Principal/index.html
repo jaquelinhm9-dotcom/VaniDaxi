@@ -72,157 +72,128 @@ button,input,select{font:inherit}button{cursor:pointer}.app{min-height:100vh;dis
     </div>
   </div>
 
+
 <section class="page active" id="page-dashboard">
   <div class="grid g4">
-    <div class="card kpi"><div class="kpiLabel">Ventas de hoy</div><div class="kpiNum">$48,250</div><div class="kpiFoot">↑ 8.4% vs. ayer</div></div>
-    <div class="card kpi"><div class="kpiLabel">Pedidos activos</div><div class="kpiNum">37</div><div class="kpiFoot">14 en entrega</div></div>
-    <div class="card kpi"><div class="kpiLabel">Vendedores activos</div><div class="kpiNum">126</div><div class="kpiFoot">4 nuevos hoy</div></div>
-    <div class="card kpi"><div class="kpiLabel">Casos pendientes</div><div class="kpiNum">8</div><div class="kpiFoot warn">2 requieren atención</div></div>
+    <div class="card kpi"><div class="kpiLabel">Ventas de hoy</div><div class="kpiNum">$0.00</div><div class="kpiFoot">Sin datos registrados</div></div>
+    <div class="card kpi"><div class="kpiLabel">Pedidos activos</div><div class="kpiNum">0</div><div class="kpiFoot">Sin pedidos registrados</div></div>
+    <div class="card kpi"><div class="kpiLabel">Vendedores activos</div><div class="kpiNum">0</div><div class="kpiFoot">Sin datos registrados</div></div>
+    <div class="card kpi"><div class="kpiLabel">Casos pendientes</div><div class="kpiNum">0</div><div class="kpiFoot">Sin incidencias registradas</div></div>
   </div>
-
   <div class="sectionHead"><h2>Estado del sistema</h2></div>
   <div class="statusPanel">
-    <div class="card">
-      <div class="grid g3">
-        <div class="health"><span class="healthDot"></span><div><b>VaniDaxi</b><small>Operación normal</small></div></div>
-        <div class="health"><span class="healthDot"></span><div><b>VaniReparte</b><small>Conectado</small></div></div>
-        <div class="health"><span class="healthDot"></span><div><b>Atención automática</b><small>Disponible</small></div></div>
-      </div>
-    </div>
-    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="kpiLabel">Casos resueltos automáticamente</div><div style="font-size:24px;font-weight:900;margin-top:5px">91%</div></div><span class="badge green">Objetivo</span></div><div class="progress" style="margin-top:12px"><span style="width:91%"></span></div></div>
+    <div class="card"><div class="grid g3">
+      <div class="health"><span class="healthDot"></span><div><b>VaniDaxi</b><small>Sin datos operativos conectados</small></div></div>
+      <div class="health"><span class="healthDot"></span><div><b>VaniReparte</b><small>Sin datos operativos conectados</small></div></div>
+      <div class="health"><span class="healthDot"></span><div><b>Atención</b><small>Sin actividad registrada</small></div></div>
+    </div></div>
+    <div class="card"><div class="sectionHead" style="margin-top:0"><h2>Datos</h2><span class="badge">Vacío</span></div><p class="tiny muted">Este panel no inventa ventas, pedidos, usuarios ni incidencias. Los indicadores se llenarán cuando se conecten las fuentes reales.</p></div>
   </div>
-
-  <div class="sectionHead"><h2>Requieren atención</h2><button class="link" onclick="go('incidents')">Ver todas →</button></div>
-  <div class="card">
-    <div class="alertList">
-      <div class="alertItem urgent"><span class="signal"></span><div class="alertMain"><b>Emergencia — entrega #VD-5821</b><span>Reporte de seguridad · requiere intervención humana</span></div><button class="btn red" onclick="openEmergency()">Abrir</button></div>
-      <div class="alertItem"><span class="signal amber"></span><div class="alertMain"><b>Pedido no recibido — #VD-5817</b><span>Comprador · hace 12 min</span></div><span class="badge orange">Pendiente</span></div>
-      <div class="alertItem"><span class="signal amber"></span><div class="alertMain"><b>Cobro no reconocido — #VD-5809</b><span>Comprador · hace 35 min</span></div><span class="badge orange">Revisar</span></div>
-    </div>
-  </div>
-
-  <div class="sectionHead"><h2>Acciones rápidas</h2></div>
+  <div class="sectionHead"><h2>Atajos</h2></div>
   <div class="quick">
-    <button class="quickCard" onclick="go('support')"><span class="quickIcon">💬</span><div><b>Atender casos</b><small>8 pendientes</small></div></button>
-    <button class="quickCard" onclick="go('team')"><span class="quickIcon">🛡️</span><div><b>Gestionar permisos</b><small>Equipo administrativo</small></div></button>
-    <button class="quickCard" onclick="go('couriers')"><span class="quickIcon">🚴</span><div><b>Revisar repartidores</b><small>6 por verificar</small></div></button>
-    <button class="quickCard" onclick="go('finance')"><span class="quickIcon">💰</span><div><b>Ver finanzas</b><small>Liquidaciones</small></div></button>
+    <button class="quickCard" onclick="go('support')"><span class="quickIcon">💬</span><div><b>Atención</b><small>Sin casos registrados</small></div></button>
+    <button class="quickCard" onclick="go('team')"><span class="quickIcon">🛡️</span><div><b>Permisos</b><small>Configuración por función</small></div></button>
+    <button class="quickCard" onclick="go('couriers')"><span class="quickIcon">🚴</span><div><b>Repartidores</b><small>Sin registros todavía</small></div></button>
+    <button class="quickCard" onclick="go('finance')"><span class="quickIcon">💰</span><div><b>Finanzas</b><small>Sin movimientos todavía</small></div></button>
   </div>
 </section>
 
 <section class="page" id="page-support">
-  <div class="grid g3"><div class="card kpi"><div class="kpiLabel">Conversaciones hoy</div><div class="kpiNum">138</div><div class="kpiFoot">126 automáticas</div></div><div class="card kpi"><div class="kpiLabel">Escaladas</div><div class="kpiNum">12</div><div class="kpiFoot warn">8 pendientes</div></div><div class="card kpi"><div class="kpiLabel">Tiempo medio</div><div class="kpiNum">4m</div><div class="kpiFoot">Objetivo ≤ 10m</div></div></div>
-  <div class="sectionHead"><h2>Bandeja de atención</h2><span class="badge">Automática + humana</span></div>
-  <div class="card tableWrap"><div class="toolbar"><input placeholder="Buscar usuario o caso"><select><option>Todos los casos</option><option>Escalados</option><option>Automáticos</option><option>Urgentes</option></select></div>
-  <table><thead><tr><th>Prioridad</th><th>Usuario</th><th>Asunto</th><th>Modo</th><th>Actualizado</th><th></th></tr></thead><tbody>
-    <tr><td><span class="badge red">Urgente</span></td><td>María López</td><td>Pedido marcado como entregado</td><td>Administrador</td><td>Ahora</td><td><button class="btn" onclick="openCase('VD-5821')">Ver</button></td></tr>
-    <tr><td><span class="badge orange">Alta</span></td><td>Juan Rodríguez</td><td>Consulta de devolución</td><td>Automática</td><td>2 min</td><td><button class="btn alt" onclick="openAuto()">Ver</button></td></tr>
-    <tr><td><span class="badge">Media</span></td><td>Tienda Norte</td><td>Pregunta sobre liquidación</td><td>Administrador</td><td>7 min</td><td><button class="btn" onclick="openCase('VEN-126')">Ver</button></td></tr>
-  </tbody></table></div>
-  <div class="sectionHead"><h2>Conversación</h2></div>
-  <div class="card chat">
-    <div class="chatHead"><div><b>María López · Pedido #VD-5821</b><div class="tiny muted">Caso escalado a administrador</div></div><button class="btn red" onclick="openEmergency()">Prioridad</button></div>
-    <div class="messages" id="messages"><div class="bubble user">Mi pedido aparece como entregado, pero no lo recibí.</div><div class="bubble bot">Puedo revisar el estado. El registro indica una entrega completada a las 22:14.</div><div class="bubble user">Necesito hablar con una persona.</div><div class="bubble bot">De acuerdo. Este caso fue enviado a un administrador.</div><div class="bubble admin">Hola. Ya estoy revisando el pedido y el historial de la entrega.</div></div>
-    <div class="compose"><input id="reply" placeholder="Escribe una respuesta..."><button class="btn" onclick="sendReply()">Enviar</button></div>
+  <div class="grid g3">
+    <div class="card kpi"><div class="kpiLabel">Conversaciones hoy</div><div class="kpiNum">0</div><div class="kpiFoot">Sin actividad registrada</div></div>
+    <div class="card kpi"><div class="kpiLabel">Escaladas</div><div class="kpiNum">0</div><div class="kpiFoot">Sin casos registrados</div></div>
+    <div class="card kpi"><div class="kpiLabel">Tiempo medio</div><div class="kpiNum">—</div><div class="kpiFoot">Sin datos</div></div>
   </div>
+  <div class="sectionHead"><h2>Bandeja de atención</h2><span class="badge">Vacía</span></div>
+  <div class="card empty"><div style="font-size:42px">💬</div><h3>No hay casos registrados</h3><p class="muted">Las conversaciones reales aparecerán aquí.</p></div>
 </section>
 
 <section class="page" id="page-incidents">
-  <div class="grid g4"><div class="card kpi"><div class="kpiLabel">Nuevas</div><div class="kpiNum">6</div><div class="kpiFoot warn">2 altas</div></div><div class="card kpi"><div class="kpiLabel">En investigación</div><div class="kpiNum">3</div><div class="kpiFoot">Seguimiento activo</div></div><div class="card kpi"><div class="kpiLabel">Resueltas hoy</div><div class="kpiNum">24</div><div class="kpiFoot">↑ 10%</div></div><div class="card kpi"><div class="kpiLabel">Emergencias</div><div class="kpiNum">2</div><div class="kpiFoot red">Prioridad</div></div></div>
-  <div class="sectionHead"><h2>Incidencias</h2><button class="btn alt" onclick="notify('Exportación de incidencias de demostración')">Exportar</button></div>
-  <div class="card tableWrap"><div class="toolbar"><select><option>Todas las categorías</option><option>Seguridad</option><option>Pedido no recibido</option><option>Pago</option><option>Repartidor</option><option>Vendedor</option></select><select><option>Todos los estados</option><option>Nueva</option><option>Investigación</option><option>Resuelta</option></select></div>
-  <table><thead><tr><th>Prioridad</th><th>Caso</th><th>Categoría</th><th>Pedido</th><th>Relación</th><th>Estado</th><th></th></tr></thead><tbody>
-  <tr><td><span class="badge red">Urgente</span></td><td>INC-1042</td><td>Seguridad</td><td>#VD-5821</td><td>R-104</td><td><span class="badge orange">Investigación</span></td><td><button class="btn" onclick="openEmergency()">Abrir</button></td></tr>
-  <tr><td><span class="badge orange">Alta</span></td><td>INC-1038</td><td>Pedido no recibido</td><td>#VD-5817</td><td>R-097</td><td><span class="badge">Nueva</span></td><td><button class="btn alt" onclick="openCase('VD-5817')">Abrir</button></td></tr>
-  <tr><td><span class="badge">Media</span></td><td>INC-1031</td><td>Cobro</td><td>#VD-5809</td><td>Pago</td><td><span class="badge">Investigación</span></td><td><button class="btn alt" onclick="openCase('VD-5809')">Abrir</button></td></tr>
-  </tbody></table></div>
+  <div class="sectionHead"><h2>Incidencias</h2><span class="badge">0</span></div>
+  <div class="card empty"><div style="font-size:42px">🛡️</div><h3>No hay incidencias registradas</h3><p class="muted">Las incidencias reales aparecerán aquí cuando ocurran.</p></div>
 </section>
 
 <section class="page" id="page-orders">
-  <div class="sectionHead"><h2>Pedidos y entregas</h2><span class="badge">VaniDaxi + VaniReparte</span></div>
-  <div class="card tableWrap"><div class="toolbar"><input placeholder="Buscar pedido"><select><option>Todos los estados</option><option>Pagado</option><option>En preparación</option><option>En entrega</option><option>Completado</option><option>Incidencia</option></select><select><option>Todos los flujos</option><option>Paquete → VaniDaxi → courier → comprador</option><option>Comercio → courier → comprador</option></select></div>
-  <table><thead><tr><th>Pedido</th><th>Flujo</th><th>Comprador</th><th>Estado</th><th>Total</th><th>Repartidor</th><th></th></tr></thead><tbody>
-  <tr><td>#VD-5821</td><td>Paquete</td><td>María L.</td><td><span class="badge red">Incidencia</span></td><td>$1,100</td><td>R-104</td><td><button class="btn" onclick="openCase('VD-5821')">Abrir</button></td></tr>
-  <tr><td>#VD-5820</td><td>Comida</td><td>María L.</td><td><span class="badge green">Completado</span></td><td>$460</td><td>R-088</td><td><button class="btn alt" onclick="notify('Detalle de pedido de demostración')">Ver</button></td></tr>
-  <tr><td>#VD-5818</td><td>Supermercado</td><td>Juan R.</td><td><span class="badge dark">En entrega</span></td><td>$780</td><td>R-097</td><td><button class="btn alt" onclick="notify('Seguimiento de demostración')">Seguir</button></td></tr>
-  </tbody></table></div>
+  <div class="grid g3">
+    <div class="card kpi"><div class="kpiLabel">Pedidos</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+    <div class="card kpi"><div class="kpiLabel">En entrega</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+    <div class="card kpi"><div class="kpiLabel">Entregados</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+  </div>
+  <div class="card empty" style="margin-top:12px"><div style="font-size:42px">📦</div><h3>No hay pedidos registrados</h3><p class="muted">El seguimiento se habilitará con pedidos reales.</p></div>
 </section>
 
 <section class="page" id="page-users">
-  <div class="sectionHead"><h2>Usuarios</h2><button class="btn" onclick="notify('Alta de usuario de demostración')">+ Nuevo</button></div>
-  <div class="card tableWrap"><div class="toolbar"><input placeholder="Buscar nombre, teléfono o correo"><select><option>Todos los roles</option><option>Comprador</option><option>Vendedor</option><option>Administrador</option></select></div>
-  <table><thead><tr><th>Usuario</th><th>Rol</th><th>Registro</th><th>Pedidos</th><th>Incidencias</th><th>Estado</th></tr></thead><tbody>
-  <tr><td>María López</td><td>Compradora</td><td>Sep 2026</td><td>14</td><td>1</td><td><span class="badge green">Activo</span></td></tr>
-  <tr><td>Juan Rodríguez</td><td>Comprador</td><td>Sep 2026</td><td>7</td><td>0</td><td><span class="badge green">Activo</span></td></tr>
-  <tr><td>Tienda Norte</td><td>Vendedor</td><td>Sep 2026</td><td>36</td><td>2</td><td><span class="badge orange">Verificación</span></td></tr>
-  </tbody></table></div>
+  <div class="grid g3">
+    <div class="card kpi"><div class="kpiLabel">Compradores</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+    <div class="card kpi"><div class="kpiLabel">Cuentas activas</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+    <div class="card kpi"><div class="kpiLabel">Verificaciones</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+  </div>
+  <div class="card empty" style="margin-top:12px"><div style="font-size:42px">👥</div><h3>No hay usuarios registrados</h3><p class="muted">Los usuarios reales aparecerán aquí.</p></div>
 </section>
 
 <section class="page" id="page-sellers">
-  <div class="grid g3"><div class="card kpi"><div class="kpiLabel">Vendedores activos</div><div class="kpiNum">126</div><div class="kpiFoot">+4 hoy</div></div><div class="card kpi"><div class="kpiLabel">En verificación</div><div class="kpiNum">9</div><div class="kpiFoot warn">3 con documentos</div></div><div class="card kpi"><div class="kpiLabel">Tiendas con incidencias</div><div class="kpiNum">5</div><div class="kpiFoot red">Revisar</div></div></div>
-  <div class="sectionHead"><h2>Vendedores</h2></div>
-  <div class="card tableWrap"><table><thead><tr><th>Vendedor</th><th>Categoría</th><th>Ventas 30d</th><th>Calificación</th><th>Estado</th><th></th></tr></thead><tbody>
-    <tr><td>Tienda Norte</td><td>Miscelánea</td><td>$184,200</td><td>4.8</td><td><span class="badge orange">Verificación</span></td><td><button class="btn" onclick="notify('Ficha de vendedor de demostración')">Revisar</button></td></tr>
-    <tr><td>Mariscos del Puerto</td><td>Comida</td><td>$96,540</td><td>4.9</td><td><span class="badge green">Activo</span></td><td><button class="btn alt" onclick="notify('Ficha de vendedor de demostración')">Ver</button></td></tr>
-    <tr><td>Imprenta Centro</td><td>Servicios</td><td>$31,870</td><td>4.7</td><td><span class="badge green">Activo</span></td><td><button class="btn alt" onclick="notify('Ficha de vendedor de demostración')">Ver</button></td></tr>
-  </tbody></table></div>
+  <div class="grid g3">
+    <div class="card kpi"><div class="kpiLabel">Vendedores</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+    <div class="card kpi"><div class="kpiLabel">En verificación</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+    <div class="card kpi"><div class="kpiLabel">Incidencias</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+  </div>
+  <div class="card empty" style="margin-top:12px"><div style="font-size:42px">🏪</div><h3>No hay vendedores registrados</h3><p class="muted">Las tiendas reales aparecerán aquí.</p></div>
 </section>
 
 <section class="page" id="page-couriers">
-  <div class="grid g4"><div class="card kpi"><div class="kpiLabel">Repartidores activos</div><div class="kpiNum">42</div><div class="kpiFoot">18 en entrega</div></div><div class="card kpi"><div class="kpiLabel">Por verificar</div><div class="kpiNum">6</div><div class="kpiFoot warn">Documentos pendientes</div></div><div class="card kpi"><div class="kpiLabel">Calificación media</div><div class="kpiNum">4.8</div><div class="kpiFoot">Últimos 30 días</div></div><div class="card kpi"><div class="kpiLabel">Incidencias abiertas</div><div class="kpiNum">3</div><div class="kpiFoot red">2 prioritarias</div></div></div>
-  <div class="sectionHead"><h2>Repartidores</h2><span class="badge">VaniReparte conectado</span></div>
-  <div class="card tableWrap"><table><thead><tr><th>Repartidor</th><th>Tipo</th><th>Entregas</th><th>Calificación</th><th>Verificación</th><th>Estado</th><th></th></tr></thead><tbody>
-    <tr><td>Carlos M.</td><td>Paquetes</td><td>486</td><td>4.9</td><td><span class="badge green">Completa</span></td><td><span class="badge green">Activo</span></td><td><button class="btn alt" onclick="notify('Ficha de repartidor de demostración')">Ver</button></td></tr>
-    <tr><td>R-097</td><td>Comida / súper</td><td>218</td><td>4.6</td><td><span class="badge green">Completa</span></td><td><span class="badge orange">Revisión</span></td><td><button class="btn alt" onclick="openCase('VD-5817')">Incidencia</button></td></tr>
-  </tbody></table></div>
+  <div class="grid g3">
+    <div class="card kpi"><div class="kpiLabel">Repartidores</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+    <div class="card kpi"><div class="kpiLabel">Verificados</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+    <div class="card kpi"><div class="kpiLabel">Incidencias</div><div class="kpiNum">0</div><div class="kpiFoot">Sin registros</div></div>
+  </div>
+  <div class="card empty" style="margin-top:12px"><div style="font-size:42px">🚴</div><h3>No hay repartidores registrados</h3><p class="muted">Los repartidores reales aparecerán aquí.</p></div>
 </section>
 
 <section class="page" id="page-team">
-  <div class="grid g3"><div class="card kpi"><div class="kpiLabel">Administradores</div><div class="kpiNum">1</div><div class="kpiFoot">Acceso principal</div></div><div class="card kpi"><div class="kpiLabel">Moderadores</div><div class="kpiNum">0</div><div class="kpiFoot">Listos para agregar</div></div><div class="card kpi"><div class="kpiLabel">Roles definidos</div><div class="kpiNum">6</div><div class="kpiFoot">Permisos separados</div></div></div>
-  <div class="sectionHead"><h2>Equipo administrativo</h2><button class="btn" onclick="notify('Invitación de demostración creada')">+ Invitar usuario</button></div>
-  <div class="card roleGrid">
-    <div class="roleRow"><div class="roleName">Tú · Administradora principal</div><div class="perms"><span class="perm">Todo</span><span class="perm">Finanzas</span><span class="perm">Seguridad</span><span class="perm">Configuración</span><span class="perm">Gobierno</span></div><span class="badge green">Propietaria</span></div>
-    <div class="roleRow"><div class="roleName">Moderador de atención</div><div class="perms"><span class="perm">Atención</span><span class="perm">Incidencias</span><span class="perm">Usuarios</span><span class="perm">Sin finanzas</span></div><span class="badge">Disponible</span></div>
-    <div class="roleRow"><div class="roleName">Operaciones</div><div class="perms"><span class="perm">Pedidos</span><span class="perm">Entregas</span><span class="perm">Repartidores</span></div><span class="badge">Disponible</span></div>
-    <div class="roleRow"><div class="roleName">Finanzas</div><div class="perms"><span class="perm">Pagos</span><span class="perm">Liquidaciones</span><span class="perm">Reportes</span></div><span class="badge">Disponible</span></div>
-  </div>
-  <div class="sectionHead"><h2>Modelo de seguridad</h2></div>
   <div class="grid g3">
-    <div class="card"><b>Mínimo privilegio</b><p class="tiny muted">Cada persona recibe solamente los permisos necesarios para su función.</p><span class="badge green">Diseñado</span></div>
+    <div class="card"><b>Mínimo privilegio</b><p class="tiny muted">Cada persona recibe únicamente los permisos necesarios para su función.</p><span class="badge green">Diseñado</span></div>
     <div class="card"><b>2FA para privilegios</b><p class="tiny muted">Los accesos administrativos críticos estarán protegidos con autenticación adicional.</p><span class="badge green">Diseñado</span></div>
-    <div class="card"><b>Auditoría</b><p class="tiny muted">Cambios administrativos importantes quedarán registrados con fecha, usuario y acción.</p><span class="badge green">Diseñado</span></div>
+    <div class="card"><b>Auditoría</b><p class="tiny muted">Los cambios administrativos importantes podrán quedar registrados cuando exista backend.</p><span class="badge green">Diseñado</span></div>
   </div>
+  <div class="sectionHead"><h2>Equipo administrativo</h2><span class="badge">Sin usuarios registrados</span></div>
+  <div class="card empty"><div style="font-size:42px">🛡️</div><p class="muted">Los miembros y permisos reales se mostrarán después de configurar la gestión de usuarios.</p></div>
 </section>
 
 <section class="page" id="page-finance">
-  <div class="grid g4"><div class="card kpi"><div class="kpiLabel">Ventas brutas</div><div class="kpiNum">$1.82M</div><div class="kpiFoot">Mes actual</div></div><div class="card kpi"><div class="kpiLabel">Comisión VaniDaxi</div><div class="kpiNum">$182K</div><div class="kpiFoot">10% de venta neta</div></div><div class="card kpi"><div class="kpiLabel">Liquidaciones</div><div class="kpiNum">$1.64M</div><div class="kpiFoot">Vendedores</div></div><div class="card kpi"><div class="kpiLabel">Reembolsos</div><div class="kpiNum">$14.2K</div><div class="kpiFoot warn">0.8%</div></div></div>
-  <div class="sectionHead"><h2>Resumen financiero</h2></div>
-  <div class="grid g2"><div class="card"><div style="color:var(--muted);font-size:11px">Ventas netas</div><div style="font-size:29px;font-weight:900;margin-top:5px">$1,820,440</div><div class="spark"><i style="height:40%"></i><i style="height:54%"></i><i style="height:50%"></i><i style="height:72%"></i><i style="height:68%"></i><i style="height:84%"></i><i style="height:93%"></i></div></div><div class="card"><h3 style="margin-top:0">Últimas liquidaciones</h3><div class="rule"><div><b>Tienda Norte</b><div class="tiny muted">PAY-00841</div></div><b>$46,220</b></div><div class="rule"><div><b>Mariscos del Puerto</b><div class="tiny muted">PAY-00839</div></div><b>$28,540</b></div><div class="rule"><div><b>Imprenta Centro</b><div class="tiny muted">PAY-00836</div></div><b>$8,760</b></div></div></div>
+  <div class="grid g4">
+    <div class="card kpi"><div class="kpiLabel">Ventas brutas</div><div class="kpiNum">$0.00</div><div class="kpiFoot">Sin datos</div></div>
+    <div class="card kpi"><div class="kpiLabel">Comisión VaniDaxi</div><div class="kpiNum">$0.00</div><div class="kpiFoot">Sin movimientos</div></div>
+    <div class="card kpi"><div class="kpiLabel">Liquidaciones</div><div class="kpiNum">$0.00</div><div class="kpiFoot">Sin movimientos</div></div>
+    <div class="card kpi"><div class="kpiLabel">Reembolsos</div><div class="kpiNum">$0.00</div><div class="kpiFoot">Sin movimientos</div></div>
+  </div>
+  <div class="card empty" style="margin-top:12px"><div style="font-size:42px">💰</div><h3>No hay movimientos financieros</h3><p class="muted">Los ingresos, egresos, comisiones y liquidaciones se mostrarán con datos reales.</p></div>
 </section>
 
 <section class="page" id="page-analytics">
-  <div class="grid g3"><div class="card"><div class="kpiLabel">Pedidos</div><div style="font-size:28px;font-weight:900;margin-top:4px">4,812</div><div class="spark"><i style="height:35%"></i><i style="height:47%"></i><i style="height:44%"></i><i style="height:62%"></i><i style="height:70%"></i><i style="height:78%"></i><i style="height:92%"></i></div></div><div class="card"><div class="kpiLabel">Clientes activos</div><div style="font-size:28px;font-weight:900;margin-top:4px">3,746</div><div class="spark"><i style="height:44%"></i><i style="height:52%"></i><i style="height:57%"></i><i style="height:62%"></i><i style="height:70%"></i><i style="height:77%"></i><i style="height:88%"></i></div></div><div class="card"><div class="kpiLabel">Resolución automática</div><div style="font-size:28px;font-weight:900;margin-top:4px">91%</div><div class="spark"><i style="height:61%"></i><i style="height:68%"></i><i style="height:72%"></i><i style="height:78%"></i><i style="height:82%"></i><i style="height:87%"></i><i style="height:91%"></i></div></div></div>
-  <div class="sectionHead"><h2>Distribución de pedidos</h2></div><div class="card"><div class="grid g3"><div><b>Paquetes</b><div class="progress" style="margin:8px 0"><span style="width:58%"></span></div><span class="tiny muted">58%</span></div><div><b>Comida</b><div class="progress" style="margin:8px 0"><span style="width:26%"></span></div><span class="tiny muted">26%</span></div><div><b>Supermercado</b><div class="progress" style="margin:8px 0"><span style="width:16%"></span></div><span class="tiny muted">16%</span></div></div></div>
+  <div class="grid g3">
+    <div class="card"><div class="kpiLabel">Pedidos</div><div style="font-size:28px;font-weight:900;margin-top:4px">0</div></div>
+    <div class="card"><div class="kpiLabel">Clientes activos</div><div style="font-size:28px;font-weight:900;margin-top:4px">0</div></div>
+    <div class="card"><div class="kpiLabel">Resolución automática</div><div style="font-size:28px;font-weight:900;margin-top:4px">—</div></div>
+  </div>
+  <div class="card empty" style="margin-top:12px"><div style="font-size:42px">📊</div><h3>Sin estadísticas todavía</h3><p class="muted">Los indicadores se calcularán a partir de actividad real.</p></div>
 </section>
 
 <section class="page" id="page-ownership">
   <div class="ownerGrid">
-    <div class="card"><div class="sectionHead" style="margin-top:0"><h2>Propiedad de la empresa</h2><span class="badge green">Preparado</span></div><div class="ownerBox"><div class="ownerTop"><div><b>Propietaria actual</b><div class="tiny muted">Control operativo principal</div></div><div class="ownerPct">100%</div></div></div><p class="tiny muted" style="line-height:1.55">La propiedad corporativa se mantiene separada de los permisos de la aplicación. Ser socio no otorga acceso administrativo automáticamente.</p></div>
-    <div class="card"><div class="sectionHead" style="margin-top:0"><h2>Futuras participaciones</h2><span class="badge">0 registradas</span></div><div class="rule"><div><b>Accionistas / socios</b><div class="tiny muted">Estructura preparada para crecer</div></div><span class="badge">Futuro</span></div><div class="rule"><div><b>Gobierno corporativo</b><div class="tiny muted">Separado de operación</div></div><span class="badge">Futuro</span></div><div class="rule"><div><b>Acceso de socio</b><div class="tiny muted">Solo por autorización expresa</div></div><span class="badge green">Separado</span></div></div>
+    <div class="card"><div class="sectionHead" style="margin-top:0"><h2>Propiedad de la empresa</h2><span class="badge">Pendiente</span></div><p class="tiny muted" style="line-height:1.55">La interfaz puede separar propiedad, administración y operación, pero no contiene datos personales o societarios ficticios.</p></div>
+    <div class="card"><div class="sectionHead" style="margin-top:0"><h2>Participaciones</h2><span class="badge">0 registradas</span></div><p class="tiny muted">Las participaciones reales se registrarán cuando exista la estructura jurídica y los datos correspondientes.</p></div>
   </div>
   <div class="sectionHead"><h2>Separación de responsabilidades</h2></div>
-  <div class="grid g3"><div class="card"><b>Propiedad</b><p class="tiny muted">Participación económica y derechos corporativos conforme a los documentos societarios.</p></div><div class="card"><b>Administración</b><p class="tiny muted">Permisos para operar VaniDaxi, gestionar equipos y tomar acciones administrativas.</p></div><div class="card"><b>Operación</b><p class="tiny muted">Acceso a atención, pedidos, repartidores, finanzas u otras áreas específicas.</p></div></div>
-  <div class="sectionHead"><h2>Preparación para inversión futura</h2></div>
-  <div class="card"><p class="tiny muted" style="line-height:1.6;margin-top:0">La plataforma puede quedar preparada para registrar una estructura separada de accionistas/socios y permisos de consulta. La distribución real de acciones, derechos de voto, restricciones y gobierno corporativo se definirá jurídicamente fuera de la interfaz, en los documentos societarios aplicables.</p><button class="btn alt" onclick="notify('Módulo de inversión futura marcado como preparado')">Marcar preparación</button></div>
+  <div class="grid g3"><div class="card"><b>Propiedad</b><p class="tiny muted">Participación económica y derechos corporativos.</p></div><div class="card"><b>Administración</b><p class="tiny muted">Permisos para operar VaniDaxi.</p></div><div class="card"><b>Operación</b><p class="tiny muted">Acceso a áreas específicas.</p></div></div>
 </section>
 
 <section class="page" id="page-settings">
   <div class="grid g2">
-    <div class="card"><h3 style="margin-top:0">Notificaciones administrativas</h3><div class="rule"><div><b>Emergencias</b><div class="tiny muted">Aviso inmediato</div></div><span class="badge green">Preparado</span></div><div class="rule"><div><b>Incidencias críticas</b><div class="tiny muted">Seguridad, fraude, cobros</div></div><span class="badge green">Preparado</span></div><div class="rule"><div><b>Consultas escaladas</b><div class="tiny muted">Centro de atención</div></div><span class="badge green">Preparado</span></div><div class="rule"><div><b>Resumen diario</b><div class="tiny muted">Informe administrativo</div></div><span class="badge green">Preparado</span></div></div>
-    <div class="card"><h3 style="margin-top:0">Seguridad del panel</h3><div class="rule"><div><b>2FA</b><div class="tiny muted">Para cuentas privilegiadas</div></div><span class="badge green">Diseñado</span></div><div class="rule"><div><b>Permisos por rol</b><div class="tiny muted">Servidor + base de datos</div></div><span class="badge green">Diseñado</span></div><div class="rule"><div><b>Auditoría</b><div class="tiny muted">Acciones administrativas</div></div><span class="badge green">Diseñado</span></div></div>
+    <div class="card"><h3 style="margin-top:0">Notificaciones administrativas</h3><div class="rule"><b>Emergencias</b><div class="tiny muted">Aviso inmediato cuando exista una incidencia real.</div></div><div class="rule"><b>Incidencias críticas</b><div class="tiny muted">Seguridad, fraude o cobros.</div></div><div class="rule"><b>Resumen diario</b><div class="tiny muted">Informe cuando haya actividad.</div></div></div>
+    <div class="card"><h3 style="margin-top:0">Seguridad del panel</h3><div class="rule"><b>2FA</b><div class="tiny muted">Para cuentas privilegiadas.</div></div><div class="rule"><b>Permisos por rol</b><div class="tiny muted">Servidor + base de datos.</div></div><div class="rule"><b>Auditoría</b><div class="tiny muted">Acciones administrativas.</div></div></div>
   </div>
   <div class="sectionHead"><h2>Registro de auditoría</h2></div>
-  <div class="card tableWrap"><table><thead><tr><th>Fecha</th><th>Administrador</th><th>Acción</th><th>Referencia</th></tr></thead><tbody><tr><td>21/09/2026 22:18</td><td>Administradora</td><td>Abrió una incidencia</td><td>INC-1042</td></tr><tr><td>21/09/2026 22:06</td><td>Atención</td><td>Respondió al comprador</td><td>#VD-5817</td></tr><tr><td>21/09/2026 21:55</td><td>Finanzas</td><td>Revisó liquidación</td><td>PAY-00841</td></tr></tbody></table></div>
+  <div class="card empty"><div style="font-size:42px">🧾</div><h3>No hay eventos de auditoría</h3><p class="muted">Los eventos aparecerán cuando existan acciones administrativas reales.</p></div>
 </section>
 
 <div class="mobileNav">
