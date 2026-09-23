@@ -2,26 +2,65 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VaniDaxi — Descargar aplicaciones</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102b59">
+<title>VaniDaxi · Descargas</title>
 <style>
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f5f7fb;color:#13234a;margin:0;padding:28px}
-main{max-width:520px;margin:auto}
-.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#7b4be8,#2e6bf4,#1fc5b7);display:grid;place-items:center;color:#fff;font-weight:900;font-size:34px}
-.card{background:#fff;border:1px solid #e3e8f1;border-radius:20px;padding:20px;margin:12px 0;box-shadow:0 8px 24px rgba(20,40,80,.08)}
-h1{margin:14px 0 6px}h2{margin:0 0 4px}p{color:#71809a;line-height:1.5}
-a{display:block;text-decoration:none;background:#173b8f;color:#fff;padding:14px 16px;border-radius:14px;font-weight:800;text-align:center;margin-top:12px}
-small{color:#8a95a8}
+:root{--navy:#102b59;--blue:#2e6cf4;--a:#ff8a00;--b:#ffb51c;--bg:#f4f7fb;--line:#dfe6ef}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#142542}
+main{max-width:540px;margin:auto;padding:24px 16px 40px}.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#7b4be8,#2e6bf4,#1fc5b7);display:grid;place-items:center;color:#fff;font-size:35px;font-weight:1000}h1{margin:15px 0 4px;font-size:30px}p{color:#718096;line-height:1.5}.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 9px 26px #14254212}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.tag{font-size:10px;font-weight:900;padding:6px 8px;border-radius:99px;background:#eef3ff;color:#3156bc}.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px 15px;margin-top:12px;font-weight:900;font-size:15px;background:linear-gradient(135deg,var(--a),var(--b));color:#102b59}.alt{display:block;text-align:center;margin-top:9px;color:#2e63d5;font-size:11px;text-decoration:none}.status{display:none;margin:12px 0;padding:11px 12px;border-radius:12px;background:#eef5ff;color:#36537a;font-size:12px}.status.show{display:block}.note{font-size:11px;color:#7c8799;line-height:1.45;margin-top:18px}
 </style>
 </head>
 <body>
 <main>
 <div class="logo">V</div>
 <h1>Aplicaciones VaniDaxi</h1>
-<p>Descarga cada aplicación directamente desde VaniDaxi.</p>
-<div class="card"><h2>VaniDaxi</h2><small>Compradores y vendedores</small><a href="downloads/VaniDaxi-Actualizada.apk" download>Descargar VaniDaxi.apk</a></div>
-<div class="card"><h2>VaniReparte</h2><small>Repartidores</small><a href="downloads/VaniReparte-Actualizada.apk" download>Descargar VaniReparte.apk</a></div>
-<div class="card"><h2>VaniDaxi Panel</h2><small>Administración</small><a href="downloads/VaniDaxi-Panel-Actualizada.apk" download>Descargar VaniDaxi-Panel.apk</a></div>
+<p>Descarga la versión 2.0 directamente desde esta página.</p>
+<div id="status" class="status"></div>
+
+<div class="card">
+  <div class="row"><div><h2>VaniDaxi</h2><small>Compradores y vendedores</small></div><span class="tag">2.0</span></div>
+  <button class="btn" onclick="downloadApk('VaniDaxi-2.0.apk','VaniDaxi-2.0.apk')">Descargar VaniDaxi</button>
+  <a class="alt" href="downloads/VaniDaxi-2.0.apk">Usar descarga directa</a>
+</div>
+
+<div class="card">
+  <div class="row"><div><h2>VaniReparte</h2><small>Repartidores</small></div><span class="tag">2.0</span></div>
+  <button class="btn" onclick="downloadApk('VaniReparte-2.0.apk','VaniReparte-2.0.apk')">Descargar VaniReparte</button>
+  <a class="alt" href="downloads/VaniReparte-2.0.apk">Usar descarga directa</a>
+</div>
+
+<div class="card">
+  <div class="row"><div><h2>VaniDaxi Panel</h2><small>Administración</small></div><span class="tag">2.0</span></div>
+  <button class="btn" onclick="downloadApk('VaniDaxi-Panel-2.0.apk','VaniDaxi-Panel-2.0.apk')">Descargar Panel</button>
+  <a class="alt" href="downloads/VaniDaxi-Panel-2.0.apk">Usar descarga directa</a>
+</div>
+
+<div class="note">El botón principal primero carga el APK y después crea el archivo de descarga en el dispositivo, en lugar de entregar el APK directamente al gestor de descargas del navegador.</div>
 </main>
+<script>
+const statusEl=document.getElementById("status");
+function say(t){statusEl.textContent=t;statusEl.className="status show";}
+async function downloadApk(file,name){
+  try{
+    say("Preparando "+name+"…");
+    const res=await fetch("downloads/"+encodeURIComponent(file)+"?v=2",{cache:"no-store"});
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    const blob=await res.blob();
+    if(blob.size<100000)throw new Error("Archivo incompleto");
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    say(name+" está listo para guardarse en Descargas.");
+  }catch(e){
+    say("La descarga automática no pudo completarse. Usa «Usar descarga directa».");
+  }
+}
+</script>
 </body>
 </html>
