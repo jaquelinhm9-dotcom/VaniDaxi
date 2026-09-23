@@ -110,10 +110,7 @@ EOF
   android:viewportHeight="108">
   <path
     android:fillColor="#FFFFFFFF"
-    android:pathData="M28,78 L54,25 L80,78 L68,78 L61,63 L47,63 L40,78 Z"/>
-  <path
-    android:fillColor="#FFFFFFFF"
-    android:pathData="M50,54 L58,54 L54,44 Z"/>
+    android:pathData="M22,29 L37,29 L54,66 L71,29 L86,29 L62,78 L46,78 Z"/>
 </vector>
 EOF
 
