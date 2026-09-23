@@ -14,6 +14,7 @@ create_app() {
 
   mkdir -p "$dir/app/src/main/java/$pkg_path"
   mkdir -p "$dir/app/src/main/res/drawable"
+  mkdir -p "$dir/app/src/main/res/mipmap-anydpi-v26"
   mkdir -p "$dir/app/src/main/assets/www"
 
   cat > "$dir/settings.gradle" <<'EOF'
@@ -94,22 +95,33 @@ EOF
 </manifest>
 EOF
 
-  cat > "$dir/app/src/main/res/drawable/ic_launcher.xml" <<'EOF'
+  cat > "$dir/app/src/main/res/drawable/ic_launcher_bg.xml" <<'EOF'
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+  <corners android:radius="24dp"/>
+  <gradient android:angle="135" android:startColor="#7B4BE8" android:centerColor="#2E6BF4" android:endColor="#1FC5B7" android:type="linear"/>
+</shape>
+EOF
+
+  cat > "$dir/app/src/main/res/drawable/ic_launcher_fg.xml" <<'EOF'
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
   android:width="108dp"
   android:height="108dp"
   android:viewportWidth="108"
   android:viewportHeight="108">
   <path
-    android:fillColor="#F28A18"
-    android:pathData="M54,4A50,50 0,1 0,54 104A50,50 0,1 0,54 4"/>
+    android:fillColor="#FFFFFFFF"
+    android:pathData="M28,78 L54,25 L80,78 L68,78 L61,63 L47,63 L40,78 Z"/>
   <path
-    android:fillColor="#FFFFFF"
-    android:pathData="M35,76 L54,31 L73,76 L64,76 L59,64 L49,64 L44,76 Z"/>
-  <path
-    android:fillColor="#FFFFFF"
-    android:pathData="M51,56 L57,56 L54,48 Z"/>
+    android:fillColor="#FFFFFFFF"
+    android:pathData="M50,54 L58,54 L54,44 Z"/>
 </vector>
+EOF
+
+  cat > "$dir/app/src/main/res/drawable/ic_launcher.xml" <<'EOF'
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:drawable="@drawable/ic_launcher_bg"/>
+  <item android:drawable="@drawable/ic_launcher_fg"/>
+</layer-list>
 EOF
 
   cat > "$dir/app/src/main/java/$pkg_path/MainActivity.java" <<EOF
