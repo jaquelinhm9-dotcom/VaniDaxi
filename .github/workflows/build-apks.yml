@@ -20,17 +20,22 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Prepare Android SDK
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Configure Android SDK tools
+        shell: bash
         run: |
-          export ANDROID_SDK_ROOT="/usr/local/lib/android/sdk"
+          set -euo pipefail
           SDKMANAGER="$(find "$ANDROID_SDK_ROOT/cmdline-tools" -type f -name sdkmanager | sort | tail -1)"
-          echo "Using sdkmanager: $SDKMANAGER"
+          echo "SDKMANAGER=$SDKMANAGER"
+          SDK_DIR="$(dirname "$(dirname "$SDKMANAGER")")"
+          echo "$SDK_DIR/bin" >> "$GITHUB_PATH"
+          echo "$ANDROID_SDK_ROOT/platform-tools" >> "$GITHUB_PATH"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
-      - name: Install Android 16 SDK
-        run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+          echo "Installed SDK components:"
+          "$SDKMANAGER" --list_installed | head -100
 
       - name: Gradle 9.6
         uses: gradle/actions/setup-gradle@v4
@@ -41,21 +46,23 @@ jobs:
         run: bash scripts/build_android.sh
 
       - name: Build VaniDaxi
-        run: gradle -p build/android/VaniDaxi assembleDebug
+        run: gradle --no-daemon --stacktrace -p build/android/VaniDaxi assembleDebug
 
       - name: Build VaniReparte
-        run: gradle -p build/android/VaniReparte assembleDebug
+        run: gradle --no-daemon --stacktrace -p build/android/VaniReparte assembleDebug
 
       - name: Build Panel Principal
-        run: gradle -p build/android/Panel-Principal assembleDebug
+        run: gradle --no-daemon --stacktrace -p build/android/Panel-Principal assembleDebug
 
       - name: Collect APKs
         run: |
+          set -euo pipefail
           mkdir -p dist
           cp build/android/VaniDaxi/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi.apk
           cp build/android/VaniReparte/app/build/outputs/apk/debug/app-debug.apk dist/VaniReparte.apk
           cp build/android/Panel-Principal/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi-Panel.apk
           sha256sum dist/*.apk
+          ls -lh dist
 
       - name: Upload three APKs
         uses: actions/upload-artifact@v4
