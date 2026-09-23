@@ -23,11 +23,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          command -v sdkmanager
-          command -v adb || true
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+          SDKROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          SDKMANAGER="$SDKROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -f "$SDKMANAGER" ]; then
+            SDKMANAGER="$(find "$SDKROOT/cmdline-tools" -type f -name sdkmanager 2>/dev/null | sort | tail -1)"
+          fi
+          echo "SDKROOT=$SDKROOT"
+          echo "SDKMANAGER=$SDKMANAGER"
+          test -n "$SDKMANAGER"
+          test -f "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+          echo "$SDKROOT/platform-tools" >> "$GITHUB_PATH"
+          echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
 
       - name: Gradle 9.6
         uses: gradle/actions/setup-gradle@v4
@@ -48,8 +56,7 @@ jobs:
             echo "=== Gradle ==="
             gradle --version
             echo "=== SDK ==="
-            echo "ANDROID_HOME=$ANDROID_HOME"
-            sdkmanager --list_installed | head -80
+            echo "ANDROID_HOME=${ANDROID_HOME:-}"
             echo "=== Generated files ==="
             find build/android -maxdepth 5 -type f | sort
             echo "=== VaniDaxi ==="
@@ -64,6 +71,7 @@ jobs:
             gradle --no-daemon --stacktrace -p build/android/Panel-Principal assembleDebug
             E3=$?
             echo "Panel exit=$E3"
+            echo "=== APKs ==="
             find build/android -type f -name "*.apk" -print
             exit $((E1 || E2 || E3))
           } 2>&1 | tee diagnostics/build.log
