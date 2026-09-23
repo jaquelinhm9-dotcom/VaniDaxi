@@ -110,6 +110,132 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Publish permanent download release
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="android-${{ github.run_number }}"
+          gh release create "$TAG" \
+            dist/VaniDaxi.apk \
+            dist/VaniReparte.apk \
+            dist/VaniDaxi-Panel.apk \
+            --title "VaniDaxi Apps Android ${{ github.run_number }}" \
+            --notes "APK descargables de VaniDaxi, VaniReparte y Panel Principal." \
+            --latest=false
+name: Build VaniDaxi APKs
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'downloads/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Prepare Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          SDKMANAGER="$SDKROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -f "$SDKMANAGER" ]; then
+            SDKMANAGER="$(find "$SDKROOT/cmdline-tools" -type f -name sdkmanager 2>/dev/null | sort | tail -1)"
+          fi
+          echo "SDKROOT=$SDKROOT"
+          echo "SDKMANAGER=$SDKMANAGER"
+          test -n "$SDKMANAGER"
+          test -f "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+          echo "$SDKROOT/platform-tools" >> "$GITHUB_PATH"
+          echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
+
+      - name: Gradle 9.6
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Generate Android projects
+        run: bash scripts/build_android.sh
+
+      - name: Build all three APKs
+        shell: bash
+        run: |
+          set +e
+          mkdir -p diagnostics
+          {
+            echo "=== Java ==="
+            java -version
+            echo "=== Gradle ==="
+            gradle --version
+            echo "=== SDK ==="
+            echo "ANDROID_HOME=${ANDROID_HOME:-}"
+            echo "=== Generated files ==="
+            find build/android -maxdepth 5 -type f | sort
+            echo "=== VaniDaxi ==="
+            gradle --no-daemon --stacktrace -p build/android/VaniDaxi assembleDebug
+            E1=$?
+            echo "VaniDaxi exit=$E1"
+            echo "=== VaniReparte ==="
+            gradle --no-daemon --stacktrace -p build/android/VaniReparte assembleDebug
+            E2=$?
+            echo "VaniReparte exit=$E2"
+            echo "=== Panel ==="
+            gradle --no-daemon --stacktrace -p build/android/Panel-Principal assembleDebug
+            E3=$?
+            echo "Panel exit=$E3"
+            echo "=== APKs ==="
+            find build/android -type f -name "*.apk" -print
+            exit $((E1 || E2 || E3))
+          } 2>&1 | tee diagnostics/build.log
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VaniDaxi-build-diagnostics
+          path: diagnostics/build.log
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Collect APKs
+        if: success()
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp build/android/VaniDaxi/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi.apk
+          cp build/android/VaniReparte/app/build/outputs/apk/debug/app-debug.apk dist/VaniReparte.apk
+          cp build/android/Panel-Principal/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi-Panel.apk
+          sha256sum dist/*.apk
+          ls -lh dist
+
+      - name: Upload three APKs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VaniDaxi-3-APKs
+          path: dist/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Prepare public download site
         if: success()
         shell: bash
