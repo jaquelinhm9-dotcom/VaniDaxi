@@ -34,6 +34,11 @@
     remove:(name,filters)=>request('/rest/v1/'+name+'?'+qp(filters),{method:'DELETE',headers:{Prefer:'return=minimal'}})
   };
   async function rpc(name,args={}){return request('/rest/v1/rpc/'+name,{method:'POST',body:JSON.stringify(args)})}
+  async function edge(name,method="POST",body=null){
+    const opts={method};
+    if(body!==null)opts.body=JSON.stringify(body);
+    return request('/functions/v1/'+name,opts);
+  }
   async function profile(){const u=await me();if(!u)return null;const rows=await table.list('profiles','id,full_name,username,phone,role,is_active,terms_accepted_at,terms_version',{id:'eq.'+u.id});return rows[0]||null}
   function oauth(provider){const redirect=encodeURIComponent(location.href.split('#')[0]);location.href=base+'/auth/v1/authorize?provider='+encodeURIComponent(provider)+'&redirect_to='+redirect}
   window.VaniCore={config:c,session,save,request,signIn,signUp,me,profile,table,rpc,oauth,signOut:()=>save(null)};
