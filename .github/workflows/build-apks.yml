@@ -107,23 +107,54 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Publish permanent APK files
+      - name: Prepare public download site
         if: success()
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p downloads
-          cp dist/VaniDaxi.apk downloads/VaniDaxi.apk
-          cp dist/VaniReparte.apk downloads/VaniReparte.apk
-          cp dist/VaniDaxi-Panel.apk downloads/VaniDaxi-Panel.apk
-          cp dist/VaniDaxi.apk downloads/VaniDaxi.apk.tmp
-          rm downloads/VaniDaxi.apk.tmp
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-Panel.apk
-          if git diff --cached --quiet; then
-            echo "Los APK ya estaban publicados y no cambiaron."
-          else
-            git commit -m "Publicar APKs Android"
-            git push origin HEAD:main
-          fi
+          rm -rf site
+          mkdir -p site
+          cp dist/VaniDaxi.apk site/VaniDaxi.apk
+          cp dist/VaniReparte.apk site/VaniReparte.apk
+          cp dist/VaniDaxi-Panel.apk site/VaniDaxi-Panel.apk
+          cat > site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="es">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>VaniDaxi — Descargas</title>
+            <style>
+              body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 18px;color:#222}
+              a{display:block;padding:16px 18px;margin:12px 0;border:1px solid #ddd;border-radius:12px;text-decoration:none;color:inherit}
+              small{color:#666}
+            </style>
+          </head>
+          <body>
+            <h1>VaniDaxi</h1>
+            <p>Descarga las aplicaciones Android:</p>
+            <a href="VaniDaxi.apk" download><strong>VaniDaxi</strong><br><small>Aplicación para compradores y vendedores</small></a>
+            <a href="VaniReparte.apk" download><strong>VaniReparte</strong><br><small>Aplicación para repartidores</small></a>
+            <a href="VaniDaxi-Panel.apk" download><strong>Panel Principal VaniDaxi</strong><br><small>Panel administrativo</small></a>
+          </body>
+          </html>
+          HTML
+
+      - name: Upload GitHub Pages artifact
+        if: success()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy GitHub Pages
+        if: success()
+        id: pages
+        uses: actions/deploy-pages@v4
+
+      - name: Show permanent download URL
+        if: success()
+        run: |
+          echo "URL pública: https://jaquelinhm9-dotcom.github.io/VaniDaxi/"
+          echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/VaniDaxi.apk"
+          echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/VaniReparte.apk"
+          echo "Panel: https://jaquelinhm9-dotcom.github.io/VaniDaxi/VaniDaxi-Panel.apk"
