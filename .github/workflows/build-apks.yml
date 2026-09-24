@@ -1,4 +1,4 @@
-name: Build VaniDaxi public APKs
+name: Build VaniDaxi public APKs 4.0
 
 on:
   push:
@@ -11,12 +11,15 @@ permissions:
   contents: write
 
 concurrency:
-  group: public-apk-build
+  group: public-apk-build-4.0
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      APP_VERSION: "4.0.0"
+      APP_VERSION_CODE: "40"
 
     steps:
       - name: Checkout
@@ -117,13 +120,14 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p downloads
+          rm -f downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk
           cp dist/VaniDaxi.apk downloads/VaniDaxi.apk
           cp dist/VaniReparte.apk downloads/VaniReparte.apk
-          cp dist/VaniDaxi.apk downloads/VaniDaxi-3.1.apk
-          cp dist/VaniReparte.apk downloads/VaniReparte-3.1.apk
+          cp dist/VaniDaxi.apk downloads/VaniDaxi-4.0.apk
+          cp dist/VaniReparte.apk downloads/VaniReparte-4.0.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk
+          git add -A downloads
           git commit -m "Publicar APKs Android"
           git push origin HEAD:main
 
@@ -152,19 +156,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if gh release view v3.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload v3.1.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk --clobber --repo "$GITHUB_REPOSITORY"
+          if gh release view v4.0.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload v4.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-4.0.apk downloads/VaniReparte-4.0.apk --clobber --repo "$GITHUB_REPOSITORY"
           else
-            gh release create v3.1.0 dist/VaniDaxi.apk dist/VaniReparte.apk \
-              downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk \
+            gh release create v4.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk \
+              downloads/VaniDaxi-4.0.apk downloads/VaniReparte-4.0.apk \
               --repo "$GITHUB_REPOSITORY" \
-              --title "VaniDaxi 3.1 aplicaciones públicas" \
-              --notes "Instaladores APK 3.1 públicos de VaniDaxi y VaniReparte. La herramienta empresarial es web privada y no es una app pública." \
+              --title "VaniDaxi 4.0 aplicaciones públicas" \
+              --notes "Instaladores APK 4.0 públicos de VaniDaxi y VaniReparte. El Panel empresarial continúa como herramienta web privada." \
               --latest
           fi
 
       - name: Show permanent download URL
         if: success()
         run: |
-          echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-3.1.apk"
-          echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniReparte-3.1.apk"
+          echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-4.0.apk"
+          echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniReparte-4.0.apk"
