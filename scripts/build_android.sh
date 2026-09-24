@@ -225,6 +225,5 @@ EOF
 BASE="https://jaquelinhm9-dotcom.github.io/VaniDaxi/apps"
 create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html" true
 create_app build/android/VaniReparte com.vanidaxi.reparte "VaniReparte" web/VaniReparte "$BASE/VaniReparte/index.html" true
-create_app build/android/Panel-Principal com.vanidaxi.admin "VaniDaxi Panel" web/Panel-Principal "$BASE/Panel-Principal/index.html" false
 
 echo "Android projects generated."
