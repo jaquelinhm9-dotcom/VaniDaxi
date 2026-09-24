@@ -4,10 +4,14 @@ Repositorio del ecosistema VaniDaxi.
 
 ## Aplicaciones públicas
 
-- **VaniDaxi** — compradores y vendedores.
-- **VaniReparte** — repartidores.
+- **VaniDaxi 4.0.0** — compradores y vendedores.
+- **VaniReparte 4.0.0** — repartidores.
 
-La versión pública que se está generando y publicando es **3.1**. El workflow `.github/workflows/build-apks.yml` construye ambas APK en una sola ejecución y publica los instaladores en GitHub Releases y GitHub Pages.
+La línea pública actual es **4.0.0**. El workflow `.github/workflows/build-apks.yml` construye las dos APK con Android SDK 36 y publica los instaladores en GitHub Releases y GitHub Pages.
+
+## Preparación para Google Play
+
+El workflow `.github/workflows/play-store-aab.yml` genera los AAB 4.0.0 y queda conectado al éxito del build público. No existe publicación automática a Google Play.
 
 ## Herramienta empresarial
 
