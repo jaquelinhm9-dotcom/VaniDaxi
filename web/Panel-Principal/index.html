@@ -169,9 +169,18 @@ function newEmployeeForm(){
 }
 async function saveEmployee(){
  try{
+  const email=$("#e_email").value.trim().toLowerCase();
+  if(!email||!email.includes("@"))throw Error("Escribe un correo válido para el empleado.");
   const perms={};["operations","accounting","hr","support","users","inventory","sales"].forEach(k=>perms[k]=$("#perm_"+k).checked);
-  const id=await C.rpc("create_company_employee",{p_email:$("#e_email").value.trim().toLowerCase(),p_full_name:$("#e_name").value.trim(),p_department_id:$("#e_dept").value||null,p_job_title:$("#e_job").value.trim()||null,p_contract_type:$("#e_contract").value,p_salary_amount:Number($("#e_salary").value||0)||null,p_salary_frequency:$("#e_freq").value,p_permissions:perms,p_notes:$("#e_notes").value.trim()||null});
-  closeModal();await refresh();toast("Empleado registrado");
+  await C.rpc("create_company_employee",{p_email:email,p_full_name:$("#e_name").value.trim(),p_department_id:$("#e_dept").value||null,p_job_title:$("#e_job").value.trim()||null,p_contract_type:$("#e_contract").value,p_salary_amount:Number($("#e_salary").value||0)||null,p_salary_frequency:$("#e_freq").value,p_permissions:perms,p_notes:$("#e_notes").value.trim()||null});
+  let msg="Empleado registrado.";
+  try{
+   const invite=await C.invoke("invite-company-employee",{email});
+   msg=invite.already_exists?"Empleado registrado. El correo ya tenía una cuenta; podrá iniciar sesión con ese correo.":"Empleado registrado y se envió la invitación al correo.";
+  }catch(inviteErr){
+   msg="Empleado registrado, pero no se pudo enviar la invitación: "+(inviteErr.message||"error de correo");
+  }
+  closeModal();await refresh();toast(msg);
  }catch(e){toast(e.message||"No se pudo registrar al empleado")}}
 async function changeEmployeeStatus(id,status){try{await C.rpc("update_company_employee_status",{p_employee_id:id,p_status:status,p_reason:null});await refresh();toast(status==="active"?"Empleado activado":"Empleado suspendido")}catch(e){toast(e.message||"No se pudo cambiar el estado")}}
 async function terminateEmployee(id){const reason=prompt("Motivo de la baja o despido:");if(!reason)return;try{await C.rpc("update_company_employee_status",{p_employee_id:id,p_status:"terminated",p_reason:reason});await refresh();toast("Empleado dado de baja")}catch(e){toast(e.message||"No se pudo dar de baja al empleado")}}
