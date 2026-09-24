@@ -25,6 +25,9 @@
   }).join('&');
   async function signIn(email,password){const d=await request('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})},false);save(d);return d}
   async function signUp(email,password,meta){const d=await request('/auth/v1/signup',{method:'POST',body:JSON.stringify({email,password,data:meta||{}})},false);if(d.access_token)save(d);return d}
+  async function recoverPassword(email,redirectTo){return request('/auth/v1/recover',{method:'POST',body:JSON.stringify({email,options:redirectTo?{redirectTo}:undefined})},false)}
+  async function updatePassword(password){return request('/auth/v1/user',{method:'PUT',body:JSON.stringify({password})})}
+  function consumeRecovery(){try{const p=new URLSearchParams((location.hash||'').replace(/^#/,'').replace(/^\?/,'').replace(/&amp;/g,'&'));if(p.get('type')==='recovery'&&p.get('access_token')){save({access_token:p.get('access_token'),refresh_token:p.get('refresh_token'),expires_in:Number(p.get('expires_in')||3600),token_type:p.get('token_type')||'bearer'});if(history.replaceState)history.replaceState({},document.title,location.pathname+location.search);return true}}catch(_){ }return false}
   async function me(){const s=session();if(!s?.access_token)return null;try{return await request('/auth/v1/user')}catch(_){return null}}
   const table={
     list:(name,select='*',filters={},extra='')=>request('/rest/v1/'+name+'?select='+encodeURIComponent(select)+(Object.keys(filters).length?'&'+qp(filters):'')+(extra?'&'+extra:'')),
