@@ -46,16 +46,13 @@ jobs:
           mkdir -p site/downloads
           mkdir -p site/apps/VaniDaxi
           mkdir -p site/apps/VaniReparte
-          mkdir -p site/apps/Panel-Principal
 
           cp index.html site/index.html
           cp web/VaniDaxi/index.html web/VaniDaxi/app-config.js web/VaniDaxi/supabase-client.js site/apps/VaniDaxi/
           cp web/VaniReparte/index.html web/VaniReparte/app-config.js web/VaniReparte/supabase-client.js site/apps/VaniReparte/
-          cp web/Panel-Principal/index.html web/Panel-Principal/app-config.js web/Panel-Principal/supabase-client.js site/apps/Panel-Principal/
 
           cp downloads/VaniDaxi-3.0.apk site/downloads/VaniDaxi-3.0.apk
           cp downloads/VaniReparte-3.0.apk site/downloads/VaniReparte-3.0.apk
-          cp downloads/VaniDaxi-Panel-3.0.apk site/downloads/VaniDaxi-Panel-3.0.apk
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
