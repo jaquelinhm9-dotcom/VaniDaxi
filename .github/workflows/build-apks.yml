@@ -1,4 +1,4 @@
-name: Build VaniDaxi public APKs
+name: Build VaniDaxi public APKs 3.1
 
 on:
   push:
@@ -115,11 +115,11 @@ jobs:
           mkdir -p downloads
           cp dist/VaniDaxi.apk downloads/VaniDaxi.apk
           cp dist/VaniReparte.apk downloads/VaniReparte.apk
-          cp dist/VaniDaxi.apk downloads/VaniDaxi-3.0.apk
-          cp dist/VaniReparte.apk downloads/VaniReparte-3.0.apk
+          cp dist/VaniDaxi.apk downloads/VaniDaxi-3.1.apk
+          cp dist/VaniReparte.apk downloads/VaniReparte-3.1.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk
+          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk
           git commit -m "Publicar APKs Android"
           git push origin HEAD:main
 
@@ -148,14 +148,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if gh release view v3.0.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk --clobber --repo "$GITHUB_REPOSITORY"
+          if gh release view v3.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk --clobber --repo "$GITHUB_REPOSITORY"
           else
             gh release create v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk \
               downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk \
               --repo "$GITHUB_REPOSITORY" \
-              --title "VaniDaxi 3.0 aplicaciones públicas" \
-              --notes "Instaladores APK 3.0 públicos de VaniDaxi y VaniReparte. La herramienta empresarial es web privada y no es una app pública." \
+              --title "VaniDaxi 3.1 aplicaciones públicas" \
+              --notes "Instaladores APK 3.1 públicos de VaniDaxi y VaniReparte. La herramienta empresarial es web privada y no es una app pública. La herramienta empresarial es web privada y no es una app pública." \
               --latest
           fi
 
