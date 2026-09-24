@@ -10,6 +10,7 @@ create_app() {
   local label="$3"
   local src="$4"
   local remote_url="$5"
+  local needs_location="$6"
   local pkg_path
   pkg_path="$(echo "$pkg" | tr '.' '/')"
 
@@ -65,8 +66,14 @@ EOF
   cat > "$dir/app/src/main/AndroidManifest.xml" <<EOF
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-permission android:name="android.permission.INTERNET"/>
+EOF
+  if [[ "$needs_location" == "true" ]]; then
+    cat >> "$dir/app/src/main/AndroidManifest.xml" <<'EOF'
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+EOF
+  fi
+  cat >> "$dir/app/src/main/AndroidManifest.xml" <<EOF
   <application
     android:allowBackup="false"
     android:usesCleartextTraffic="false"
@@ -130,10 +137,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.GeolocationPermissions;
 import android.content.pm.PackageManager;
+import android.Manifest;
 
 public class MainActivity extends Activity {
+  private static final int LOCATION_REQUEST = 9001;
   private WebView web;
   private boolean usingRemote = true;
+  private String pendingGeoOrigin;
+  private GeolocationPermissions.Callback pendingGeoCallback;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -164,20 +175,40 @@ public class MainActivity extends Activity {
         handler.cancel();
       }
     });
+
     web.setWebChromeClient(new WebChromeClient() {
       @Override public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-        if (android.os.Build.VERSION.SDK_INT >= 23 && checkSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
-          requestPermissions(new String[]{"android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION"}, 9001);
+        if (android.os.Build.VERSION.SDK_INT < 23 ||
+            checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+          callback.invoke(origin, true, false);
+          return;
         }
-        callback.invoke(origin, true, false);
+        pendingGeoOrigin = origin;
+        pendingGeoCallback = callback;
+        requestPermissions(
+          new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+          LOCATION_REQUEST
+        );
       }
     });
-    if (android.os.Build.VERSION.SDK_INT >= 23 && checkSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
-      requestPermissions(new String[]{"android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION"}, 9001);
-    }
+
     usingRemote = true;
-    web.loadUrl("$remote_url?v=20260923-2");
+    web.loadUrl("$remote_url?v=20260923-3");
     setContentView(web);
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode == LOCATION_REQUEST && pendingGeoCallback != null) {
+      boolean granted = android.os.Build.VERSION.SDK_INT < 23 ||
+          checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+          checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+      pendingGeoCallback.invoke(pendingGeoOrigin, granted, false);
+      pendingGeoOrigin = null;
+      pendingGeoCallback = null;
+    }
   }
 
   @Override public void onBackPressed() {
@@ -192,8 +223,8 @@ EOF
 }
 
 BASE="https://jaquelinhm9-dotcom.github.io/VaniDaxi/apps"
-create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html"
-create_app build/android/VaniReparte com.vanidaxi.reparte "VaniReparte" web/VaniReparte "$BASE/VaniReparte/index.html"
-create_app build/android/Panel-Principal com.vanidaxi.admin "VaniDaxi Panel" web/Panel-Principal "$BASE/Panel-Principal/index.html"
+create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html" false
+create_app build/android/VaniReparte com.vanidaxi.reparte "VaniReparte" web/VaniReparte "$BASE/VaniReparte/index.html" true
+create_app build/android/Panel-Principal com.vanidaxi.admin "VaniDaxi Panel" web/Panel-Principal "$BASE/Panel-Principal/index.html" false
 
 echo "Android projects generated."
