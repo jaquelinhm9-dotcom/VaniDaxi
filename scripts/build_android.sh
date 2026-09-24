@@ -52,8 +52,8 @@ android {
     applicationId '$pkg'
     minSdk 26
     targetSdk 36
-    versionCode 3
-    versionName '3.0.0'
+    versionCode 31
+    versionName '3.1.0'
   }
   buildTypes { debug { minifyEnabled false } }
   compileOptions {
@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
     });
 
     usingRemote = true;
-    web.loadUrl("$remote_url?v=20260923-4");
+    web.loadUrl("$remote_url?v=20260924-1");
     setContentView(web);
   }
 
