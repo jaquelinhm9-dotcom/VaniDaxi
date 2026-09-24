@@ -2,6 +2,10 @@ name: Build VaniDaxi Play Store AABs
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "scripts/build_android.sh"
+      - ".github/workflows/play-store-aab.yml"
 
 permissions:
   contents: read
@@ -55,7 +59,7 @@ jobs:
           set -euo pipefail
           rm -rf build/keys
           mkdir -p build/keys
-          if [ -n "${PLAY_UPLOAD_KEYSTORE_B64:-}" ]; then
+          if [ -n "${PLAY_UPLOAD_KEYSTORE_B64:-}" ] && [ -n "${{ secrets.PLAY_UPLOAD_KEY_ALIAS }}" ] && [ -n "${{ secrets.PLAY_UPLOAD_STORE_PASSWORD }}" ] && [ -n "${{ secrets.PLAY_UPLOAD_KEY_PASSWORD }}" ]; then
             printf '%s' "$PLAY_UPLOAD_KEYSTORE_B64" | base64 --decode > build/keys/play-upload.jks
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
