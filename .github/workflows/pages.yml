@@ -1,6 +1,13 @@
 name: Publicar descargas VaniDaxi
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - ".github/workflows/pages.yml"
+      - "downloads/**"
+      - "web/**"
   workflow_dispatch:
   workflow_run:
     workflows: ["Build VaniDaxi APKs"]
@@ -17,7 +24,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages
