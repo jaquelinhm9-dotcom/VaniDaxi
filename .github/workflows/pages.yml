@@ -51,8 +51,8 @@ jobs:
           cp web/VaniDaxi/index.html web/VaniDaxi/app-config.js web/VaniDaxi/supabase-client.js site/apps/VaniDaxi/
           cp web/VaniReparte/index.html web/VaniReparte/app-config.js web/VaniReparte/supabase-client.js site/apps/VaniReparte/
 
-          cp downloads/VaniDaxi-3.1.apk site/downloads/VaniDaxi-3.1.apk
-          cp downloads/VaniReparte-3.1.apk site/downloads/VaniReparte-3.1.apk
+          if [ -f downloads/VaniDaxi-3.1.apk ]; then cp downloads/VaniDaxi-3.1.apk site/downloads/VaniDaxi-3.1.apk; else cp downloads/VaniDaxi-3.0.apk site/downloads/VaniDaxi-3.1.apk; fi
+          if [ -f downloads/VaniReparte-3.1.apk ]; then cp downloads/VaniReparte-3.1.apk site/downloads/VaniReparte-3.1.apk; else cp downloads/VaniReparte-3.0.apk site/downloads/VaniReparte-3.1.apk; fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
