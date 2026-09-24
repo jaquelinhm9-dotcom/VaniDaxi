@@ -12,8 +12,8 @@ create_app() {
   local remote_url="$5"
   local needs_location="$6"
   local pkg_path
-  local app_version="${APP_VERSION:-3.1.0}"
-  local version_code="${APP_VERSION_CODE:-31}"
+  local app_version="${APP_VERSION:-4.0.0}"
+  local version_code="${APP_VERSION_CODE:-40}"
   pkg_path="$(echo "$pkg" | tr '.' '/')"
 
   mkdir -p "$dir/app/src/main/java/$pkg_path"
@@ -215,7 +215,7 @@ public class MainActivity extends Activity {
     });
 
     usingRemote = true;
-    web.loadUrl("$remote_url?v=20260924-1");
+    web.loadUrl("$remote_url");
     setContentView(web);
   }
 
@@ -244,7 +244,7 @@ EOF
 }
 
 BASE="https://jaquelinhm9-dotcom.github.io/VaniDaxi/apps"
-create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html" true
-create_app build/android/VaniReparte com.vanidaxi.reparte "VaniReparte" web/VaniReparte "$BASE/VaniReparte/index.html" true
+create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html?v=4.0.0" true
+create_app build/android/VaniReparte com.vanidaxi.reparte "VaniReparte" web/VaniReparte " $BASE/VaniReparte/index.html?v=4.0.0" true
 
 echo "Android projects generated."
