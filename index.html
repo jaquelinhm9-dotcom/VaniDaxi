@@ -8,50 +8,42 @@
 <style>
 :root{--navy:#102b59;--blue:#2e6cf4;--a:#ff8a00;--b:#ffb51c;--bg:#f4f7fb;--line:#dfe6ef}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#142542}
-main{max-width:540px;margin:auto;padding:24px 16px 40px}.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#7b4be8,#2e6bf4,#1fc5b7);display:grid;place-items:center;color:#fff;font-size:35px;font-weight:1000}h1{margin:15px 0 4px;font-size:30px}p{color:#718096;line-height:1.5}.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 9px 26px #14254212}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.tag{font-size:10px;font-weight:900;padding:6px 8px;border-radius:99px;background:#eef3ff;color:#3156bc}.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px 15px;margin-top:12px;font-weight:900;font-size:15px;background:linear-gradient(135deg,var(--a),var(--b));color:#102b59}.alt{display:block;text-align:center;margin-top:9px;color:#2e63d5;font-size:11px;text-decoration:none}.status{display:none;margin:12px 0;padding:11px 12px;border-radius:12px;background:#eef5ff;color:#36537a;font-size:12px}.status.show{display:block}.note{font-size:11px;color:#7c8799;line-height:1.45;margin-top:18px}
+main{max-width:540px;margin:auto;padding:24px 16px 40px}
+.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#7b4be8,#2e6bf4,#1fc5b7);display:grid;place-items:center;color:#fff;font-size:35px;font-weight:1000}
+h1{margin:15px 0 4px;font-size:30px}p{color:#718096;line-height:1.5}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 9px 26px #14254212}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tag{font-size:10px;font-weight:900;padding:6px 8px;border-radius:99px;background:#eef3ff;color:#3156bc}
+.btn{display:block;text-align:center;text-decoration:none;border-radius:14px;padding:14px 15px;margin-top:12px;font-weight:900;font-size:15px;background:linear-gradient(135deg,var(--a),var(--b));color:#102b59}
+.alt{display:block;text-align:center;margin-top:9px;color:#2e63d5;font-size:11px;text-decoration:none}
+.note{font-size:11px;color:#7c8799;line-height:1.45;margin-top:18px}
 </style>
 </head>
 <body>
 <main>
 <div class="logo">V</div>
 <h1>Aplicaciones VaniDaxi</h1>
-<p>Descarga la versión 3.0 directamente desde esta página.</p>
-<div id="status" class="status"></div>
+<p>Descarga cada aplicación por separado. No necesitas descargar ningún ZIP.</p>
 
 <div class="card">
   <div class="row"><div><h2>VaniDaxi</h2><small>Compradores y vendedores</small></div><span class="tag">3.0</span></div>
-  <button class="btn" onclick="downloadApp("vanidaxi")">Descargar VaniDaxi</button>
-  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=vanidaxi">Usar descarga directa</a>
+  <a class="btn" href="./downloads/VaniDaxi-3.0.apk">Descargar VaniDaxi</a>
+  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=vanidaxi">Descarga alternativa</a>
 </div>
 
 <div class="card">
   <div class="row"><div><h2>VaniReparte</h2><small>Repartidores</small></div><span class="tag">3.0</span></div>
-  <button class="btn" onclick="downloadApp("vanireparte")">Descargar VaniReparte</button>
-  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=vanireparte">Usar descarga directa</a>
+  <a class="btn" href="./downloads/VaniReparte-3.0.apk">Descargar VaniReparte</a>
+  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=vanireparte">Descarga alternativa</a>
 </div>
 
 <div class="card">
   <div class="row"><div><h2>VaniDaxi Panel</h2><small>Administración</small></div><span class="tag">3.0</span></div>
-  <button class="btn" onclick="downloadApp("panel")">Descargar Panel</button>
-  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=panel">Usar descarga directa</a>
+  <a class="btn" href="./downloads/VaniDaxi-Panel-3.0.apk">Descargar Panel</a>
+  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=panel">Descarga alternativa</a>
 </div>
 
-<div class="note">La descarga ahora sale desde un servicio de archivos independiente del repositorio, con nombre de APK y Content-Disposition para Android.</div>
+<div class="note">En Android, después de descargar, abre el APK desde la carpeta Descargas. Si Android lo solicita, permite la instalación desde esa aplicación.</div>
 </main>
-<script>
-const statusEl=document.getElementById("status");
-function say(t){statusEl.textContent=t;statusEl.className="status show";}
-function downloadApp(app){
-  const names={vanidaxi:"VaniDaxi-3.0.apk",vanireparte:"VaniReparte-3.0.apk",panel:"VaniDaxi-Panel-3.0.apk"};
-  const url="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app="+encodeURIComponent(app);
-  say("Iniciando descarga de "+names[app]+"…");
-  const a=document.createElement("a");
-  a.href=url;
-  a.download=names[app];
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
-</script>
 </body>
 </html>
