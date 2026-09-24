@@ -149,18 +149,18 @@ jobs:
         run: |
           set -euo pipefail
           if gh release view v3.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk --clobber --repo "$GITHUB_REPOSITORY"
+            gh release upload v3.1.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk --clobber --repo "$GITHUB_REPOSITORY"
           else
-            gh release create v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk \
-              downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk \
+            gh release create v3.1.0 dist/VaniDaxi.apk dist/VaniReparte.apk \
+              downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk \
               --repo "$GITHUB_REPOSITORY" \
               --title "VaniDaxi 3.1 aplicaciones públicas" \
-              --notes "Instaladores APK 3.1 públicos de VaniDaxi y VaniReparte. La herramienta empresarial es web privada y no es una app pública. La herramienta empresarial es web privada y no es una app pública." \
+              --notes "Instaladores APK 3.1 públicos de VaniDaxi y VaniReparte. La herramienta empresarial es web privada y no es una app pública." \
               --latest
           fi
 
       - name: Show permanent download URL
         if: success()
         run: |
-          echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-3.0.apk"
-          echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniReparte-3.0.apk"
+          echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-3.1.apk"
+          echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniReparte-3.1.apk"
