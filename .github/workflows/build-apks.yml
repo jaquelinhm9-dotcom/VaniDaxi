@@ -1,4 +1,4 @@
-name: Build VaniDaxi APKs
+name: Build VaniDaxi public APKs
 
 on:
   push:
@@ -52,7 +52,7 @@ jobs:
       - name: Generate Android projects
         run: bash scripts/build_android.sh
 
-      - name: Build all three APKs
+      - name: Build public APKs
         shell: bash
         run: |
           set +e
@@ -74,13 +74,9 @@ jobs:
             gradle --no-daemon --stacktrace -p build/android/VaniReparte assembleDebug
             E2=$?
             echo "VaniReparte exit=$E2"
-            echo "=== Panel ==="
-            gradle --no-daemon --stacktrace -p build/android/Panel-Principal assembleDebug
-            E3=$?
-            echo "Panel exit=$E3"
             echo "=== APKs ==="
             find build/android -type f -name "*.apk" -print
-            exit $((E1 || E2 || E3))
+            exit $((E1 || E2))
           } 2>&1 | tee diagnostics/build.log
 
       - name: Upload diagnostics
@@ -99,15 +95,14 @@ jobs:
           mkdir -p dist
           cp build/android/VaniDaxi/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi.apk
           cp build/android/VaniReparte/app/build/outputs/apk/debug/app-debug.apk dist/VaniReparte.apk
-          cp build/android/Panel-Principal/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi-Panel.apk
           sha256sum dist/*.apk
           ls -lh dist
 
-      - name: Upload three APKs
+      - name: Upload two public APKs
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: VaniDaxi-3-APKs
+          name: VaniDaxi-public-APKs
           path: dist/*.apk
           if-no-files-found: error
           retention-days: 14
@@ -120,13 +115,11 @@ jobs:
           mkdir -p downloads
           cp dist/VaniDaxi.apk downloads/VaniDaxi.apk
           cp dist/VaniReparte.apk downloads/VaniReparte.apk
-          cp dist/VaniDaxi-Panel.apk downloads/VaniDaxi-Panel.apk
           cp dist/VaniDaxi.apk downloads/VaniDaxi-3.0.apk
           cp dist/VaniReparte.apk downloads/VaniReparte-3.0.apk
-          cp dist/VaniDaxi-Panel.apk downloads/VaniDaxi-Panel-3.0.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-Panel.apk downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk downloads/VaniDaxi-Panel-3.0.apk
+          git add downloads/VaniDaxi.apk downloads/VaniReparte.apk downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk
           git commit -m "Publicar APKs Android"
           git push origin HEAD:main
 
@@ -137,7 +130,7 @@ jobs:
           set -euo pipefail
           rm -rf downloads/.payload
           mkdir -p downloads/.payload
-          for f in VaniDaxi VaniReparte VaniDaxi-Panel; do
+          for f in VaniDaxi VaniReparte; do
             b64="downloads/.payload/$f.b64"
             base64 -w0 "dist/$f.apk" > "$b64"
             split -b 600k -d -a 3 "$b64" "${b64}.part."
@@ -156,14 +149,13 @@ jobs:
         run: |
           set -euo pipefail
           if gh release view v3.0.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk dist/VaniDaxi-Panel.apk \
-              downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk downloads/VaniDaxi-Panel-3.0.apk --clobber --repo "$GITHUB_REPOSITORY"
+            gh release upload v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk --clobber --repo "$GITHUB_REPOSITORY"
           else
-            gh release create v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk dist/VaniDaxi-Panel.apk \
-              downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk downloads/VaniDaxi-Panel-3.0.apk \
+            gh release create v3.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk \
+              downloads/VaniDaxi-3.0.apk downloads/VaniReparte-3.0.apk \
               --repo "$GITHUB_REPOSITORY" \
-              --title "VaniDaxi 3.0 APKs" \
-              --notes "Instaladores APK 3.0 de VaniDaxi, VaniReparte y VaniDaxi Panel con autenticación, datos reales y flujos operativos." \
+              --title "VaniDaxi 3.0 aplicaciones públicas" \
+              --notes "Instaladores APK 3.0 públicos de VaniDaxi y VaniReparte. La herramienta empresarial es web privada y no es una app pública." \
               --latest
           fi
 
@@ -172,4 +164,3 @@ jobs:
         run: |
           echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-3.0.apk"
           echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniReparte-3.0.apk"
-          echo "Panel: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-Panel-3.0.apk"
