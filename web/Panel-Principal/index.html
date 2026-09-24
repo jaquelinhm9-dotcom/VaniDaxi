@@ -27,7 +27,7 @@
 <script src="supabase-client.js"></script>
 <script>
 const C=window.VaniCore,loginEl=document.getElementById("login"),app=document.getElementById("app"),pages=document.getElementById("pages"),sideNav=document.getElementById("sideNav"),toastEl=document.getElementById("toast");
-let user=null,profile=null,access={owner:false,employee:{}},page="dashboard",snapshot={},users=[],sellers=[],couriers=[],orders=[],tickets=[],commissions=[],pendingProducts=[],pendingStores=[],premiumRequests=[],departments=[],employees=[],accounts=[],balances=[],journal=[],audit=[];
+let user=null,profile=null,access={owner:false,employee:{}},page="dashboard",snapshot={},users=[],sellers=[],couriers=[],orders=[],tickets=[],commissions=[],pendingProducts=[],pendingStores=[],premiumRequests=[],departments=[],employees=[],accounts=[],balances=[],journal=[],audit=[];let syncTimer=null,syncBusy=false;
 const $=s=>document.querySelector(s),esc=s=>String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 function toast(m){toastEl.textContent=m;toastEl.classList.add("show");setTimeout(()=>toastEl.classList.remove("show"),2600)}
 function money(n){return "$"+Number(n||0).toLocaleString("es-MX",{minimumFractionDigits:2})}
@@ -58,8 +58,9 @@ async function boot(){if(C.consumeRecovery()){passwordResetView();return}
    access=await C.rpc("get_my_company_access",{});
    if(access.owner!==true && (!access.employee || access.employee.employment_status!=="active")) throw Error("Esta cuenta no tiene un acceso empresarial activo.");
  }catch(e){C.signOut();loginView();toast(e.message||"Acceso denegado");return}
- loginEl.style.display="none";app.style.display="block";buildNav();await refresh();
+ loginEl.style.display="none";app.style.display="block";buildNav();await refresh();startSync();
 }
+function startSync(){if(syncTimer)clearInterval(syncTimer);syncTimer=setInterval(async()=>{if(syncBusy||!user||document.hidden)return;syncBusy=true;try{if(!document.getElementById("modal").classList.contains("show"))await refresh()}catch(_){ }finally{syncBusy=false}},15000)}
 function navItems(){
  const items=[
   ["dashboard","⌂","Panel general",true],
