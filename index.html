@@ -15,51 +15,42 @@ main{max-width:540px;margin:auto;padding:24px 16px 40px}.logo{width:64px;height:
 <main>
 <div class="logo">V</div>
 <h1>Aplicaciones VaniDaxi</h1>
-<p>Descarga la versión 2.1 directamente desde esta página.</p>
+<p>Descarga la versión 3.0 directamente desde esta página.</p>
 <div id="status" class="status"></div>
 
 <div class="card">
-  <div class="row"><div><h2>VaniDaxi</h2><small>Compradores y vendedores</small></div><span class="tag">2.0</span></div>
-  <button class="btn" onclick="downloadApk('VaniDaxi-2.1.apk','VaniDaxi-2.1.apk')">Descargar VaniDaxi</button>
-  <a class="alt" href="downloads/VaniDaxi-2.1.apk">Usar descarga directa</a>
+  <div class="row"><div><h2>VaniDaxi</h2><small>Compradores y vendedores</small></div><span class="tag">3.0</span></div>
+  <button class="btn" onclick="downloadApp("vanidaxi")">Descargar VaniDaxi</button>
+  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=vanidaxi">Usar descarga directa</a>
 </div>
 
 <div class="card">
-  <div class="row"><div><h2>VaniReparte</h2><small>Repartidores</small></div><span class="tag">2.0</span></div>
-  <button class="btn" onclick="downloadApk('VaniReparte-2.1.apk','VaniReparte-2.1.apk')">Descargar VaniReparte</button>
-  <a class="alt" href="downloads/VaniReparte-2.1.apk">Usar descarga directa</a>
+  <div class="row"><div><h2>VaniReparte</h2><small>Repartidores</small></div><span class="tag">3.0</span></div>
+  <button class="btn" onclick="downloadApp("vanireparte")">Descargar VaniReparte</button>
+  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=vanireparte">Usar descarga directa</a>
 </div>
 
 <div class="card">
-  <div class="row"><div><h2>VaniDaxi Panel</h2><small>Administración</small></div><span class="tag">2.0</span></div>
-  <button class="btn" onclick="downloadApk('VaniDaxi-Panel-2.1.apk','VaniDaxi-Panel-2.1.apk')">Descargar Panel</button>
-  <a class="alt" href="downloads/VaniDaxi-Panel-2.1.apk">Usar descarga directa</a>
+  <div class="row"><div><h2>VaniDaxi Panel</h2><small>Administración</small></div><span class="tag">3.0</span></div>
+  <button class="btn" onclick="downloadApp("panel")">Descargar Panel</button>
+  <a class="alt" href="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app=panel">Usar descarga directa</a>
 </div>
 
-<div class="note">El botón principal primero carga el APK y después crea el archivo de descarga en el dispositivo, en lugar de entregar el APK directamente al gestor de descargas del navegador.</div>
+<div class="note">La descarga ahora sale desde un servicio de archivos independiente del repositorio, con nombre de APK y Content-Disposition para Android.</div>
 </main>
 <script>
 const statusEl=document.getElementById("status");
 function say(t){statusEl.textContent=t;statusEl.className="status show";}
-async function downloadApk(file,name){
-  try{
-    say("Preparando "+name+"…");
-    const res=await fetch("downloads/"+encodeURIComponent(file)+"?v=2",{cache:"no-store"});
-    if(!res.ok)throw new Error("HTTP "+res.status);
-    const blob=await res.blob();
-    if(blob.size<100000)throw new Error("Archivo incompleto");
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download=name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),60000);
-    say(name+" está listo para guardarse en Descargas.");
-  }catch(e){
-    say("La descarga automática no pudo completarse. Usa «Usar descarga directa».");
-  }
+function downloadApp(app){
+  const names={vanidaxi:"VaniDaxi-3.0.apk",vanireparte:"VaniReparte-3.0.apk",panel:"VaniDaxi-Panel-3.0.apk"};
+  const url="https://oycwqpqoxgohzqivclzd.supabase.co/functions/v1/apk-download?app="+encodeURIComponent(app);
+  say("Iniciando descarga de "+names[app]+"…");
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=names[app];
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 </script>
 </body>
