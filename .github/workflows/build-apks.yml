@@ -1,4 +1,4 @@
-name: Build VaniDaxi public APKs 3.1
+name: Build VaniDaxi public APKs
 
 on:
   push:
