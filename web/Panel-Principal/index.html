@@ -67,9 +67,9 @@ function navItems(){
   ["accounting","📚","Contabilidad","accounting"],
   ["hr","👔","Recursos humanos","hr"],
   ["support","💬","Atención","support"],
-  ["settings","⚙","Configuración","settings"]
+  ["settings","⚙","Configuración","owner_only"]
  ];
- return items.filter(x=>x[3]===true||perm(x[3]));
+ return items.filter(x=>x[3]===true||(x[3]==="owner_only"?owner():perm(x[3])));
 }
 function buildNav(){
  const items=navItems();
@@ -161,7 +161,7 @@ function newEmployeeForm(){
 }
 async function saveEmployee(){
  try{
-  const perms={};["operations","accounting","hr","support","users","inventory","sales","settings"].forEach(k=>perms[k]=$("#perm_"+k).checked);
+  const perms={};["operations","accounting","hr","support","users","inventory","sales"].forEach(k=>perms[k]=$("#perm_"+k).checked);
   const id=await C.rpc("create_company_employee",{p_email:$("#e_email").value.trim().toLowerCase(),p_full_name:$("#e_name").value.trim(),p_department_id:$("#e_dept").value||null,p_job_title:$("#e_job").value.trim()||null,p_contract_type:$("#e_contract").value,p_salary_amount:Number($("#e_salary").value||0)||null,p_salary_frequency:$("#e_freq").value,p_permissions:perms,p_notes:$("#e_notes").value.trim()||null});
   closeModal();await refresh();toast("Empleado registrado");
  }catch(e){toast(e.message||"No se pudo registrar al empleado")}}
