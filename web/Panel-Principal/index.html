@@ -27,7 +27,7 @@
 <script src="supabase-client.js"></script>
 <script>
 const C=window.VaniCore,loginEl=document.getElementById("login"),app=document.getElementById("app"),pages=document.getElementById("pages"),sideNav=document.getElementById("sideNav"),toastEl=document.getElementById("toast");
-let user=null,profile=null,access={owner:false,employee:{}},page="dashboard",snapshot={},users=[],sellers=[],couriers=[],orders=[],tickets=[],commissions=[],pendingProducts=[],pendingStores=[],premiumRequests=[],departments=[],employees=[],accounts=[],balances=[],journal=[];
+let user=null,profile=null,access={owner:false,employee:{}},page="dashboard",snapshot={},users=[],sellers=[],couriers=[],orders=[],tickets=[],commissions=[],pendingProducts=[],pendingStores=[],premiumRequests=[],departments=[],employees=[],accounts=[],balances=[],journal=[],audit=[];
 const $=s=>document.querySelector(s),esc=s=>String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 function toast(m){toastEl.textContent=m;toastEl.classList.add("show");setTimeout(()=>toastEl.classList.remove("show"),2600)}
 function money(n){return "$"+Number(n||0).toLocaleString("es-MX",{minimumFractionDigits:2})}
@@ -67,6 +67,7 @@ function navItems(){
   ["accounting","📚","Contabilidad","accounting"],
   ["hr","👔","Recursos humanos","hr"],
   ["support","💬","Atención","support"],
+  ["audit","🛡","Auditoría","owner_only"],
   ["settings","⚙","Configuración","owner_only"]
  ];
  return items.filter(x=>x[3]===true||(x[3]==="owner_only"?owner():perm(x[3])));
@@ -100,12 +101,14 @@ async function refresh(){
    departments=await C.table.list("company_departments","id,name,description,active,created_at,updated_at",{}, "order=name.asc").catch(()=>[]);
    employees=await C.table.list("company_employees","id,user_id,email,full_name,department_id,job_title,employment_status,contract_type,salary_amount,salary_frequency,hire_date,termination_date,termination_reason,permissions,notes,created_at,updated_at",{}, "order=created_at.desc").catch(()=>[]);
   }
+  if(owner()) audit=await C.table.list("company_audit_log","id,actor_user_id,action,table_name,record_id,changed_fields,created_at",{}, "order=created_at.desc&limit=100").catch(()=>[]);
+  else audit=[];
   render();
  }catch(e){toast(e.message||"No se pudieron cargar los datos")}
 }
 function navActive(){
  document.querySelectorAll("[data-p]").forEach(x=>x.classList.toggle("active",x.dataset.p===page));
- const titles={dashboard:["Centro de control empresarial","Panel general"],users:["Personas y cuentas","Usuarios"],sellers:["Operación comercial","Vendedores"],couriers:["Logística","Repartidores"],orders:["Operación","Pedidos y entregas"],finance:["Finanzas","Finanzas"],accounting:["Contabilidad","Contabilidad general"],hr:["Personas","Recursos humanos"],support:["Atención","Centro de atención"],settings:["Propiedad","Configuración empresarial"]};
+ const titles={dashboard:["Centro de control empresarial","Panel general"],users:["Personas y cuentas","Usuarios"],sellers:["Operación comercial","Vendedores"],couriers:["Logística","Repartidores"],orders:["Operación","Pedidos y entregas"],finance:["Finanzas","Finanzas"],accounting:["Contabilidad","Contabilidad general"],hr:["Personas","Recursos humanos"],support:["Atención","Centro de atención"],audit:["Seguridad y control","Auditoría"],settings:["Propiedad","Configuración empresarial"]};
  const t=titles[page]||titles.dashboard;$("#ttl").textContent=t[1];$("#sub").textContent=t[0];
 }
 function go(p){if(p!=="dashboard"&&!navItems().some(x=>x[0]===p)){toast("No tienes permiso para esta sección");return}page=p;render();window.scrollTo({top:0})}
@@ -157,7 +160,7 @@ function newDepartment(){
 async function saveDepartment(){try{const name=$("#dep_name").value.trim();if(!name)throw Error("El nombre es obligatorio");await C.table.insert("company_departments",{name,description:$("#dep_desc").value.trim()||null});closeModal();await refresh();toast("Departamento creado")}catch(e){toast(e.message||"No se pudo crear el departamento")}}
 function newEmployeeForm(){
  const deptOptions="<option value=''>Sin departamento</option>"+departments.filter(d=>d.active).map(d=>"<option value='"+d.id+"'>"+esc(d.name)+"</option>").join("");
- openModal("<button class='close' onclick='closeModal()'>✕</button><h2>Contratar empleado</h2><label class='label'>Nombre completo</label><input id='e_name' class='input'><label class='label'>Correo laboral</label><input id='e_email' class='input' type='email'><label class='label'>Departamento</label><select id='e_dept' class='input'>"+deptOptions+"</select><label class='label'>Puesto</label><input id='e_job' class='input'><div class='grid2'><div><label class='label'>Tipo de contrato</label><select id='e_contract' class='input'><option value='indefinite'>Indefinido</option><option value='fixed_term'>Por tiempo determinado</option><option value='temporary'>Temporal</option><option value='contractor'>Prestación de servicios</option></select></div><div><label class='label'>Frecuencia salarial</label><select id='e_freq' class='input'><option value='monthly'>Mensual</option><option value='biweekly'>Quincenal</option><option value='weekly'>Semanal</option><option value='hourly'>Por hora</option></select></div></div><label class='label'>Monto salarial (opcional)</label><input id='e_salary' class='input' type='number' min='0' step='0.01'><label class='label'>Permisos del puesto</label><div class='checks'>"+["operations:Operaciones","accounting:Contabilidad","hr:Recursos humanos","support:Atención","users:Usuarios","inventory:Inventario","sales:Ventas","settings:Configuración"].map(x=>{const [k,l]=x.split(":");return "<label class='check'><input type='checkbox' id='perm_"+k+"'> "+l+"</label>"}).join("")+"</div><label class='label'>Notas</label><textarea id='e_notes' class='input' rows='3'></textarea><button class='btn primary full' style='margin-top:13px' onclick='saveEmployee()'>Registrar contratación</button>");
+ openModal("<button class='close' onclick='closeModal()'>✕</button><h2>Contratar empleado</h2><label class='label'>Nombre completo</label><input id='e_name' class='input'><label class='label'>Correo laboral</label><input id='e_email' class='input' type='email'><label class='label'>Departamento</label><select id='e_dept' class='input'>"+deptOptions+"</select><label class='label'>Puesto</label><input id='e_job' class='input'><div class='grid2'><div><label class='label'>Tipo de contrato</label><select id='e_contract' class='input'><option value='indefinite'>Indefinido</option><option value='fixed_term'>Por tiempo determinado</option><option value='temporary'>Temporal</option><option value='contractor'>Prestación de servicios</option></select></div><div><label class='label'>Frecuencia salarial</label><select id='e_freq' class='input'><option value='monthly'>Mensual</option><option value='biweekly'>Quincenal</option><option value='weekly'>Semanal</option><option value='hourly'>Por hora</option></select></div></div><label class='label'>Monto salarial (opcional)</label><input id='e_salary' class='input' type='number' min='0' step='0.01'><label class='label'>Permisos del puesto</label><div class='checks'>"+["operations:Operaciones","accounting:Contabilidad","hr:Recursos humanos","support:Atención","users:Usuarios","inventory:Inventario","sales:Ventas"].map(x=>{const [k,l]=x.split(":");return "<label class='check'><input type='checkbox' id='perm_"+k+"'> "+l+"</label>"}).join("")+"</div><label class='label'>Notas</label><textarea id='e_notes' class='input' rows='3'></textarea><button class='btn primary full' style='margin-top:13px' onclick='saveEmployee()'>Registrar contratación</button>");
 }
 async function saveEmployee(){
  try{
@@ -169,6 +172,12 @@ async function changeEmployeeStatus(id,status){try{await C.rpc("update_company_e
 async function terminateEmployee(id){const reason=prompt("Motivo de la baja o despido:");if(!reason)return;try{await C.rpc("update_company_employee_status",{p_employee_id:id,p_status:"terminated",p_reason:reason});await refresh();toast("Empleado dado de baja")}catch(e){toast(e.message||"No se pudo dar de baja al empleado")}}
 
 function supportPage(){return "<section class='page active'><div class='card table'><table><thead><tr><th>Asunto</th><th>Categoría</th><th>Estado</th><th>Prioridad</th><th>Fecha</th></tr></thead><tbody>"+(tickets.length?tickets.map(t=>"<tr><td>"+esc(t.subject||"Sin asunto")+"</td><td>"+esc(t.category||"—")+"</td><td>"+esc(t.status||"—")+"</td><td>"+esc(t.priority||"—")+"</td><td>"+date(t.created_at)+"</td></tr>").join(""):"<tr><td colspan='5'>No hay tickets registrados.</td></tr>")+"</tbody></table></div></section>"}
+
+function auditPage(){
+ if(!owner())return "<section class='page active'><div class='card'><h3>Auditoría</h3><p>Solo la propietaria puede consultar el registro de control.</p></div></section>";
+ const rows=audit.length?audit.map(a=>"<tr><td>"+date(a.created_at)+"</td><td><span class='badge'>"+esc(a.action)+"</span></td><td>"+esc(a.table_name)+"</td><td>"+esc((a.record_id||"").slice(0,12)||"—")+"</td><td>"+esc(a.actor_user_id||"—").slice(0,12)+"</td><td>"+esc((a.changed_fields||[]).join(", ")||"—")+"</td></tr>").join(""):"<tr><td colspan='6'>No hay acciones auditadas todavía.</td></tr>";
+ return "<section class='page active'><div class='grid3'><div class='card'><div class='lab'>Registros</div><div class='num'>"+audit.length+"</div></div><div class='card'><div class='lab'>Cambios de configuración</div><div class='num'>"+audit.filter(a=>a.table_name==="company_settings").length+"</div></div><div class='card'><div class='lab'>Cambios contables</div><div class='num'>"+audit.filter(a=>a.table_name.startsWith("accounting_")).length+"</div></div></div><div class='section'><h2>Registro de actividad crítica</h2></div><div class='card table'><table><thead><tr><th>Fecha</th><th>Acción</th><th>Módulo</th><th>Registro</th><th>Usuario</th><th>Campos afectados</th></tr></thead><tbody>"+rows+"</tbody></table></div><div class='card' style='margin-top:12px'><b>Protección de datos</b><p class='muted' style='font-size:12px;margin-bottom:0'>El registro conserva quién hizo el cambio, qué módulo fue afectado y qué campos cambiaron. No guarda los valores bancarios, contraseñas, NIP, tokens ni otros secretos.</p></div></section>";
+}
 
 function settingsPage(){
  if(!owner())return "<section class='page active'><div class='card'><h3>Configuración empresarial</h3><p>Solo la propietaria puede acceder a esta sección.</p></div></section>";
@@ -183,7 +192,7 @@ async function saveSettings(){
 function openOrder(id){const o=orders.find(x=>x.id===id);if(!o)return;openModal("<button class='close' onclick='closeModal()'>✕</button><h2>"+esc(o.order_number)+"</h2><p><b>Total:</b> "+money(o.total)+"</p><p><b>Estado:</b> "+esc(o.status)+"</p><p><b>Entrega:</b> "+esc(o.delivery_status||"—")+"</p><p><b>Tracking:</b> "+esc(o.delivery_tracking||"—")+"</p><label class='label'>Nuevo estado de entrega</label><select id='od_status' class='input'><option>preparing</option><option>ready_for_pickup</option><option>picked_up</option><option>in_transit</option><option>out_for_delivery</option><option>delivered</option><option>exception</option></select><label class='label'>Tracking</label><input id='od_tracking' class='input' value='"+esc(o.delivery_tracking||"")+"'><label class='label'>Notas</label><textarea id='od_notes' class='input' rows='3'></textarea><button class='btn primary full' style='margin-top:13px' onclick=\"updateDelivery('"+o.id+"')\">Guardar</button>")}
 async function updateDelivery(id){try{await C.rpc("update_order_delivery",{p_order_id:id,p_status:$("#od_status").value,p_tracking:$("#od_tracking").value.trim()||null,p_notes:$("#od_notes").value.trim()||null});closeModal();await refresh();toast("Estado actualizado")}catch(e){toast(e.message||"No se pudo actualizar")}}
 function render(){
- pages.innerHTML=page==="dashboard"?dashboard():page==="users"?usersPage():page==="sellers"?sellersPage():page==="couriers"?couriersPage():page==="orders"?ordersPage():page==="finance"?financePage():page==="accounting"?accountingPage():page==="hr"?hrPage():page==="support"?supportPage():settingsPage();
+ pages.innerHTML=page==="dashboard"?dashboard():page==="users"?usersPage():page==="sellers"?sellersPage():page==="couriers"?couriersPage():page==="orders"?ordersPage():page==="finance"?financePage():page==="accounting"?accountingPage():page==="hr"?hrPage():page==="support"?supportPage():page==="audit"?auditPage():settingsPage();
  navActive();
  if(page==="settings"&&owner())loadSettingsIntoForm();
 }
