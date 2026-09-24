@@ -52,8 +52,8 @@ android {
     applicationId '$pkg'
     minSdk 26
     targetSdk 36
-    versionCode 2
-    versionName '2.0.0'
+    versionCode 3
+    versionName '3.0.0'
   }
   buildTypes { debug { minifyEnabled false } }
   compileOptions {
@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
     });
 
     usingRemote = true;
-    web.loadUrl("$remote_url?v=20260923-3");
+    web.loadUrl("$remote_url?v=20260923-4");
     setContentView(web);
   }
 
@@ -223,7 +223,7 @@ EOF
 }
 
 BASE="https://jaquelinhm9-dotcom.github.io/VaniDaxi/apps"
-create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html" false
+create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html" true
 create_app build/android/VaniReparte com.vanidaxi.reparte "VaniReparte" web/VaniReparte "$BASE/VaniReparte/index.html" true
 create_app build/android/Panel-Principal com.vanidaxi.admin "VaniDaxi Panel" web/Panel-Principal "$BASE/Panel-Principal/index.html" false
 
