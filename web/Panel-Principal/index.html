@@ -37,8 +37,12 @@ function owner(){return access.owner===true}
 function perm(k){return owner()||access.employee&&access.employee.permissions&&access.employee.permissions[k]===true}
 function loginView(){
  loginEl.style.display="block";app.style.display="none";
- loginEl.innerHTML="<div class='brand'><span class='v'>V</span>VaniDaxi</div><div class='card' style='margin-top:15px'><h2>Herramienta empresarial privada</h2><p class='muted' style='font-size:12px'>Acceso para la propietaria y empleados autorizados. Las configuraciones maestras son exclusivas de la propietaria.</p><label class='label'>Correo</label><input id='le' class='input' type='email' autocomplete='username'><label class='label'>Contraseña</label><input id='lp' class='input' type='password' autocomplete='current-password'><button class='btn primary full' style='margin-top:14px' onclick='login()'>Iniciar sesión</button><button class='btn secondary full' style='margin-top:9px' onclick='registerEmployeeAccess()'>Crear acceso de empleado</button></div>";
+ loginEl.innerHTML="<div class='brand'><span class='v'>V</span>VaniDaxi</div><div class='card' style='margin-top:15px'><h2>Herramienta empresarial privada</h2><p class='muted' style='font-size:12px'>Acceso para la propietaria y empleados autorizados. Las configuraciones maestras son exclusivas de la propietaria.</p><label class='label'>Correo</label><input id='le' class='input' type='email' autocomplete='username'><label class='label'>Contraseña</label><input id='lp' class='input' type='password' autocomplete='current-password'><button class='btn primary full' style='margin-top:14px' onclick='login()'>Iniciar sesión</button><button class='btn secondary full' style='margin-top:9px' onclick='registerEmployeeAccess()'>Crear acceso de empleado</button><button class='link full' style='margin-top:10px' onclick='requestPasswordReset()'>¿Olvidaste tu contraseña?</button></div>";
 }
+function requestPasswordReset(){const email=prompt("Escribe el correo de tu acceso empresarial:");if(!email)return;C.recoverPassword(email.trim().toLowerCase(),location.origin+location.pathname).then(()=>toast("Revisa tu correo para restablecer la contraseña.")).catch(e=>toast(e.message||"No se pudo enviar el correo."))}
+function passwordResetView(){loginEl.style.display="block";app.style.display="none";loginEl.innerHTML="<div class='brand'><span class='v'>V</span>VaniDaxi</div><div class='card' style='margin-top:15px'><h2>Nueva contraseña</h2><p class='muted' style='font-size:12px'>Elige una nueva contraseña para el acceso empresarial.</p><label class='label'>Nueva contraseña</label><input id='newpw' class='input' type='password' autocomplete='new-password'><label class='label'>Confirmar contraseña</label><input id='newpw2' class='input' type='password' autocomplete='new-password'><button class='btn primary full' style='margin-top:14px' onclick='finishPasswordReset()'>Guardar nueva contraseña</button></div>"}
+async function finishPasswordReset(){const a=$("#newpw").value,b=$("#newpw2").value;if(a.length<8||a!==b){toast("Las contraseñas deben coincidir y tener al menos 8 caracteres.");return}try{await C.updatePassword(a);C.signOut();loginView();toast("Contraseña actualizada. Inicia sesión nuevamente.")}catch(e){toast(e.message||"No se pudo actualizar la contraseña.")}}
+
 async function login(){try{await C.signIn($("#le").value.trim(),$("#lp").value);await boot()}catch(e){toast(e.message||"No se pudo iniciar sesión")}}
 async function registerEmployeeAccess(){
  const email=prompt("Escribe el correo que la empresa registró para ti:");
@@ -46,7 +50,7 @@ async function registerEmployeeAccess(){
  const password=prompt("Crea una contraseña para tu acceso:");
  if(!password||password.length<8){toast("La contraseña debe tener al menos 8 caracteres");return}
  try{const d=await C.signUp(email.trim().toLowerCase(),password,{role:"employee"});if(d.access_token){await boot()}else{toast("Cuenta creada. Si Supabase pide confirmación de correo, confírmalo y después inicia sesión.")}}catch(e){toast(e.message||"No se pudo crear el acceso")}}
-async function boot(){
+async function boot(){if(C.consumeRecovery()){passwordResetView();return}
  user=await C.me();profile=user?await C.profile():null;
  if(!user){loginView();return}
  try{
