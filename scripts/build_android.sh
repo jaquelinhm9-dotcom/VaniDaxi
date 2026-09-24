@@ -12,6 +12,8 @@ create_app() {
   local remote_url="$5"
   local needs_location="$6"
   local pkg_path
+  local app_version="${APP_VERSION:-3.1.0}"
+  local version_code="${APP_VERSION_CODE:-31}"
   pkg_path="$(echo "$pkg" | tr '.' '/')"
 
   mkdir -p "$dir/app/src/main/java/$pkg_path"
@@ -52,10 +54,29 @@ android {
     applicationId '$pkg'
     minSdk 26
     targetSdk 36
-    versionCode 31
-    versionName '3.1.0'
+    versionCode $version_code
+    versionName '$app_version'
   }
-  buildTypes { debug { minifyEnabled false } }
+  signingConfigs {
+    if (System.getenv("PLAY_KEYSTORE_FILE") && System.getenv("PLAY_KEY_ALIAS") && System.getenv("PLAY_STORE_PASSWORD") && System.getenv("PLAY_KEY_PASSWORD")) {
+      playRelease {
+        storeFile file(System.getenv("PLAY_KEYSTORE_FILE"))
+        storePassword System.getenv("PLAY_STORE_PASSWORD")
+        keyAlias System.getenv("PLAY_KEY_ALIAS")
+        keyPassword System.getenv("PLAY_KEY_PASSWORD")
+      }
+    }
+  }
+
+  buildTypes {
+    debug { minifyEnabled false }
+    release {
+      minifyEnabled false
+      if (System.getenv("PLAY_KEYSTORE_FILE") && System.getenv("PLAY_KEY_ALIAS") && System.getenv("PLAY_STORE_PASSWORD") && System.getenv("PLAY_KEY_PASSWORD")) {
+        signingConfig signingConfigs.playRelease
+      }
+    }
+  }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_17
     targetCompatibility JavaVersion.VERSION_17
