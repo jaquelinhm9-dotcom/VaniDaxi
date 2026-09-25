@@ -15,7 +15,7 @@ cat >"$d/app/build.gradle"<<EOF
 plugins{ id 'com.android.application' }
 android{ namespace '$p'; compileSdk 36
 defaultConfig{applicationId '$p';minSdk 26;targetSdk 36;versionCode $C;versionName '$V'}
-buildTypes{debug{minifyEnabled false}release{minifyEnabled false}}
+buildTypes { debug { minifyEnabled false }; release { minifyEnabled false } }
 compileOptions{sourceCompatibility JavaVersion.VERSION_17;targetCompatibility JavaVersion.VERSION_17}}
 EOF
 cat >"$d/app/src/main/AndroidManifest.xml"<<EOF
