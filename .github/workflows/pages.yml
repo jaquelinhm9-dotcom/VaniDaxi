@@ -11,7 +11,7 @@ on:
       - "legal/**"
   workflow_dispatch:
   workflow_run:
-    workflows: ["Build VaniDaxi public APKs 4.1"]
+    workflows: ["Build VaniDaxi public APKs 4.2"]
     types: [completed]
 
 permissions:
@@ -54,8 +54,8 @@ jobs:
           cp web/VaniReparte/index.html web/VaniReparte/app-config.js web/VaniReparte/supabase-client.js site/apps/VaniReparte/
           cp legal/*.html site/legal/
 
-          test -f downloads/VaniDaxi-4.1.apk
-          test -f downloads/VaniReparte-4.1.apk
+          test -f downloads/VaniDaxi-4.2.apk
+          test -f downloads/VaniReparte-4.2.apk
           cp downloads/VaniDaxi-4.1.apk site/downloads/VaniDaxi-4.1.apk
           cp downloads/VaniReparte-4.1.apk site/downloads/VaniReparte-4.1.apk
 

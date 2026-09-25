@@ -12,8 +12,8 @@ create_app() {
   local remote_url="$5"
   local needs_location="$6"
   local pkg_path
-  local app_version="${APP_VERSION:-4.1.0}"
-  local version_code="${APP_VERSION_CODE:-41}"
+  local app_version="${APP_VERSION:-4.2.0}"
+  local version_code="${APP_VERSION_CODE:-42}"
   pkg_path="$(echo "$pkg" | tr '.' '/')"
 
   mkdir -p "$dir/app/src/main/java/$pkg_path"
@@ -116,23 +116,37 @@ EOF
 </manifest>
 EOF
 
-  cat > "$dir/app/src/main/res/drawable/ic_launcher_bg.xml" <<'EOF'
+  if [[ "$pkg" == "com.vanidaxi.app" ]]; then
+    ICON_START="#5B1CFF"; ICON_CENTER="#A42EFF"; ICON_END="#F046D7"
+  else
+    ICON_START="#087E5A"; ICON_CENTER="#0BBE7F"; ICON_END="#20E7A1"
+  fi
+  cat > "$dir/app/src/main/res/drawable/ic_launcher_bg.xml" <<EOF
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
   <corners android:radius="24dp"/>
-  <gradient android:angle="135" android:startColor="#7B4BE8" android:centerColor="#2E6BF4" android:endColor="#1FC5B7" android:type="linear"/>
+  <gradient android:angle="135" android:startColor="$ICON_START" android:centerColor="$ICON_CENTER" android:endColor="$ICON_END" android:type="linear"/>
 </shape>
 EOF
 
-  cat > "$dir/app/src/main/res/drawable/ic_launcher_fg.xml" <<'EOF'
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-  android:width="108dp"
-  android:height="108dp"
-  android:viewportWidth="108"
-  android:viewportHeight="108">
-  <path android:fillColor="#FFFFFFFF"
-    android:pathData="M22,29 L37,29 L54,66 L71,29 L86,29 L62,78 L46,78 Z"/>
+  if [[ "$pkg" == "com.vanidaxi.app" ]]; then
+    cat > "$dir/app/src/main/res/drawable/ic_launcher_fg.xml" <<'EOF'
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+  <path android:fillColor="#FF16111B" android:pathData="M28,38 L80,38 L74,82 L34,82 Z"/>
+  <path android:fillColor="#FF16111B" android:pathData="M38,38 C38,18 70,18 70,38 L63,38 C63,25 45,25 45,38 Z"/>
+  <path android:fillColor="#FFFFFFFF" android:pathData="M45,50 L54,61 L63,50 L59,49 L54,55 L49,49 Z"/>
 </vector>
 EOF
+  else
+    cat > "$dir/app/src/main/res/drawable/ic_launcher_fg.xml" <<'EOF'
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+  <path android:fillColor="#FF052018" android:pathData="M24,62 L76,62 L69,73 L35,73 Z"/>
+  <path android:fillColor="#FF052018" android:pathData="M61,38 L79,38 L84,46 L73,46 Z"/>
+  <path android:fillColor="#FF052018" android:pathData="M50,48 L61,48 L61,65 L49,65 Z"/>
+  <path android:fillColor="#FFFFFFFF" android:pathData="M22,75 C22,67 35,67 35,75 C35,83 22,83 22,75 Z"/>
+  <path android:fillColor="#FFFFFFFF" android:pathData="M67,75 C67,67 80,67 80,75 C80,83 67,83 67,75 Z"/>
+</vector>
+EOF
+  fi
 
   cat > "$dir/app/src/main/res/drawable/ic_launcher.xml" <<'EOF'
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
@@ -214,8 +228,8 @@ public class MainActivity extends Activity {
       }
     });
 
-    usingRemote = true;
-    web.loadUrl("$remote_url");
+    usingRemote = false;
+    web.loadUrl("file:///android_asset/www/index.html");
     setContentView(web);
   }
 
@@ -244,7 +258,7 @@ EOF
 }
 
 BASE="https://jaquelinhm9-dotcom.github.io/VaniDaxi/apps"
-create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html?v=4.1.0" true
-create_app build/android/VaniReparte com.vanidaxi.reparte "VaniReparte" web/VaniReparte "$BASE/VaniReparte/index.html?v=4.1.0" true
+create_app build/android/VaniDaxi com.vanidaxi.app "VaniDaxi" web/VaniDaxi "$BASE/VaniDaxi/index.html?v=4.2.0" true
+create_app build/android/VaniReparte com.vanidaxi.reparte "VaniReparte" web/VaniReparte "$BASE/VaniReparte/index.html?v=4.2.0" true
 
 echo "Android projects generated."

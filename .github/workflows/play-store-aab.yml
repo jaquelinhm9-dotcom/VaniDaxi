@@ -3,7 +3,7 @@ name: Build VaniDaxi Play Store AABs
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Build VaniDaxi public APKs 4.1"]
+    workflows: ["Build VaniDaxi public APKs 4.2"]
     types: [completed]
 
 permissions:
@@ -18,8 +18,8 @@ jobs:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
-      APP_VERSION: "4.1.0"
-      APP_VERSION_CODE: "41"
+      APP_VERSION: "4.2.0"
+      APP_VERSION_CODE: "42"
 
     steps:
       - name: Checkout
@@ -93,8 +93,8 @@ jobs:
           fi
           gradle --no-daemon --stacktrace -p build/android/VaniDaxi bundleRelease
           gradle --no-daemon --stacktrace -p build/android/VaniReparte bundleRelease
-          cp build/android/VaniDaxi/app/build/outputs/bundle/release/app-release.aab dist/play-store/VaniDaxi-4.1.aab
-          cp build/android/VaniReparte/app/build/outputs/bundle/release/app-release.aab dist/play-store/VaniReparte-4.1.aab
+          cp build/android/VaniDaxi/app/build/outputs/bundle/release/app-release.aab dist/play-store/VaniDaxi-4.2.aab
+          cp build/android/VaniReparte/app/build/outputs/bundle/release/app-release.aab dist/play-store/VaniReparte-4.2.aab
           ls -lh dist/play-store
 
       - name: Validate bundle metadata
@@ -110,7 +110,7 @@ jobs:
       - name: Upload Play Store AAB artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: VaniDaxi-Play-Store-AABs-4.1
+          name: VaniDaxi-Play-Store-AABs-4.2
           path: dist/play-store/*.aab
           if-no-files-found: error
           retention-days: 30
