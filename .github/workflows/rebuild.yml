@@ -5,6 +5,10 @@ on:
     branches: [rebuild-v1]
   workflow_dispatch:
 
+concurrency:
+  group: vani-clean-rebuild
+  cancel-in-progress: true
+
 permissions:
   contents: read
   pages: write
