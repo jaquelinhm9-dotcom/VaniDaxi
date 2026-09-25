@@ -1,4 +1,4 @@
-name: Build VaniDaxi public APKs 4.0
+name: Build VaniDaxi public APKs 4.1
 
 on:
   push:
@@ -11,15 +11,15 @@ permissions:
   contents: write
 
 concurrency:
-  group: public-apk-build-4.0
+  group: public-apk-build-4.1
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      APP_VERSION: "4.0.0"
-      APP_VERSION_CODE: "40"
+      APP_VERSION: "4.1.0"
+      APP_VERSION_CODE: "41"
 
     steps:
       - name: Checkout
@@ -58,6 +58,26 @@ jobs:
 
       - name: Generate Android projects
         run: bash scripts/build_android.sh
+
+      - name: Validate web JavaScript and Android source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          for(const f of ['web/VaniDaxi/index.html','web/VaniReparte/index.html','web/Panel-Principal/index.html']){
+            const s=fs.readFileSync(f,'utf8');
+            const blocks=[...s.matchAll(/<script(?![^>]*\\bsrc=)[^>]*>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).join('\n');
+            const out='/tmp/'+f.replace(/[^a-z0-9]/gi,'_')+'.js';
+            fs.writeFileSync(out,blocks);
+            require('child_process').execFileSync(process.execPath,['--check',out],{stdio:'inherit'});
+            console.log('JS OK:',f);
+          }
+          const build=fs.readFileSync('scripts/build_android.sh','utf8');
+          if(!build.includes('VaniReparte/index.html?v=4.1.0')) throw new Error('VaniReparte URL de Android incorrecta');
+          if(!build.includes('VaniDaxi/index.html?v=4.1.0')) throw new Error('VaniDaxi URL de Android incorrecta');
+          console.log('Android source URLs OK');
+          NODE
 
       - name: Build public APKs
         shell: bash
@@ -120,11 +140,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p downloads
-          rm -f downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk
+          rm -f downloads/VaniDaxi-3.1.apk downloads/VaniReparte-3.1.apk downloads/VaniDaxi-4.1.apk downloads/VaniReparte-4.1.apk
           cp dist/VaniDaxi.apk downloads/VaniDaxi.apk
           cp dist/VaniReparte.apk downloads/VaniReparte.apk
-          cp dist/VaniDaxi.apk downloads/VaniDaxi-4.0.apk
-          cp dist/VaniReparte.apk downloads/VaniReparte-4.0.apk
+          cp dist/VaniDaxi.apk downloads/VaniDaxi-4.1.apk
+          cp dist/VaniReparte.apk downloads/VaniReparte-4.1.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A downloads
@@ -156,19 +176,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if gh release view v4.0.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload v4.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-4.0.apk downloads/VaniReparte-4.0.apk --clobber --repo "$GITHUB_REPOSITORY"
+          if gh release view v4.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload v4.1.0 dist/VaniDaxi.apk dist/VaniReparte.apk downloads/VaniDaxi-4.1.apk downloads/VaniReparte-4.1.apk --clobber --repo "$GITHUB_REPOSITORY"
           else
-            gh release create v4.0.0 dist/VaniDaxi.apk dist/VaniReparte.apk \
+            gh release create v4.1.0 dist/VaniDaxi.apk dist/VaniReparte.apk \
               downloads/VaniDaxi-4.0.apk downloads/VaniReparte-4.0.apk \
               --repo "$GITHUB_REPOSITORY" \
-              --title "VaniDaxi 4.0 aplicaciones públicas" \
-              --notes "Instaladores APK 4.0 públicos de VaniDaxi y VaniReparte. El Panel empresarial continúa como herramienta web privada." \
+              --title "VaniDaxi 4.1 aplicaciones públicas" \
+              --notes "Instaladores APK 4.1 públicos de VaniDaxi y VaniReparte. El Panel empresarial continúa como herramienta web privada." \
               --latest
           fi
 
       - name: Show permanent download URL
         if: success()
         run: |
-          echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-4.0.apk"
-          echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniReparte-4.0.apk"
+          echo "VaniDaxi: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniDaxi-4.1.apk"
+          echo "VaniReparte: https://jaquelinhm9-dotcom.github.io/VaniDaxi/downloads/VaniReparte-4.1.apk"
