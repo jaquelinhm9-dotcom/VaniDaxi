@@ -65,12 +65,18 @@ jobs:
           set -euo pipefail
           node <<'NODE'
           const fs=require('fs');
+          const cp=require('child_process');
           for(const f of ['web/VaniDaxi/index.html','web/VaniReparte/index.html','web/Panel-Principal/index.html']){
-            const s=fs.readFileSync(f,'utf8');
-            const blocks=[...s.matchAll(/<script(?![^>]*\\bsrc=)[^>]*>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).join('\n');
+            const html=fs.readFileSync(f,'utf8');
+            const scripts=[];
+            const re=/<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
+            for(const m of html.matchAll(re)){
+              if(/\bsrc\s*=/.test(m[1])) continue;
+              scripts.push(m[2]);
+            }
             const out='/tmp/'+f.replace(/[^a-z0-9]/gi,'_')+'.js';
-            fs.writeFileSync(out,blocks);
-            require('child_process').execFileSync(process.execPath,['--check',out],{stdio:'inherit'});
+            fs.writeFileSync(out,scripts.join('\n'));
+            cp.execFileSync(process.execPath,['--check',out],{stdio:'inherit'});
             console.log('JS OK:',f);
           }
           const build=fs.readFileSync('scripts/build_android.sh','utf8');
