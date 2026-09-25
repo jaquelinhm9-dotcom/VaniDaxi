@@ -1,1 +1,1 @@
-window.VaniDaxiConfig={supabaseUrl:"https://oycwqpqoxgohzqivclzd.supabase.co",supabasePublishableKey:"sb_publishable_OIoqR1IOg5t3BIQR7g6_0w_1KWzgpYj",appName:"VaniDaxi Admin"};
+window.APP_CONFIG={demoMode:true,supabaseUrl:"",supabasePublishableKey:"",sessionKey:"vani_session_admin"};
