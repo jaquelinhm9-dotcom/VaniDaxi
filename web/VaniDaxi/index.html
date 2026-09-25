@@ -76,7 +76,7 @@ async function saveAddress(id){
   }catch(e){alert(e.message)}
 }
 async function deleteAddress(id){
-  try{if(!confirm("¿Eliminar esta dirección?"))return;await A.table.delete("addresses","id=eq."+id+"&user_id=eq."+user.id);await loadRealData();openAddresses()}catch(e){alert(e.message)}
+  try{if(!confirm("¿Eliminar esta dirección?"))return;await A.table.del("addresses","id=eq."+id+"&user_id=eq."+user.id);await loadRealData();openAddresses()}catch(e){alert(e.message)}
 }
 async function requestAccountDeletion(){try{if(!confirm("¿Solicitar la eliminación de tu cuenta y datos asociados?"))return;const email=user?.email||"";const app="vanidaxi";await A.edge("request-account-deletion","POST",{app,email});alert("La solicitud de eliminación quedó registrada.");await A.auth.signOut();user=null;role="customer";orders=[];cart=[];page="home";auth()}catch(e){alert(e.message)}}
 function recoveryPage(){return '<div class="auth"><div class="logo">V</div><h1>Nueva contraseña</h1><p>Establece una nueva contraseña para tu cuenta.</p><div class="authCard"><label class="label">Nueva contraseña</label><input id="np1" class="input" type="password" minlength="8"><label class="label">Repetir contraseña</label><input id="np2" class="input" type="password" minlength="8"><button class="btn primary full" style="margin-top:12px" onclick="finishRecovery()">Guardar nueva contraseña</button></div></div>'}
