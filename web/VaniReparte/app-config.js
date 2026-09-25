@@ -1,1 +1,1 @@
-window.APP_CONFIG={demoMode:true,supabaseUrl:"",supabasePublishableKey:"",sessionKey:"vani_session_reparte"};
+window.APP_CONFIG={demoMode:false,supabaseUrl:"https://oycwqpqoxgohzqivclzd.supabase.co",supabasePublishableKey:"sb_publishable_OIoqR1IOg5t3BIQR7g6_0w_1KWzgpYj",sessionKey:"vani_session_reparte"};
