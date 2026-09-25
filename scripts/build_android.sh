@@ -21,8 +21,33 @@ EOF
 cat >"$d/app/src/main/AndroidManifest.xml"<<EOF
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"><uses-permission android:name="android.permission.INTERNET"/><uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/><uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/><application android:theme="@android:style/Theme.Material.Light.NoActionBar" android:label="$label" android:icon="@drawable/ic"><activity android:name=".MainActivity" android:exported="true" android:screenOrientation="portrait"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>
 EOF
-cat >"$d/app/src/main/res/drawable/ic.xml"<<EOF
+cat >"$d/app/src/main/res/drawable/ic_bg.xml"<<EOF
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><corners android:radius="22dp"/><gradient android:angle="135" android:startColor="$a" android:centerColor="$b" android:endColor="$a"/></shape>
+EOF
+if [[ "$p" == "com.vanidaxi.app" ]]; then
+  cat >"$d/app/src/main/res/drawable/ic_fg.xml"<<'EOF'
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+<path android:fillColor="#FF151118" android:pathData="M28,35 L80,35 L74,82 L34,82 Z"/>
+<path android:fillColor="#FF151118" android:pathData="M39,35 C39,15 69,15 69,35 L62,35 C62,22 46,22 46,35 Z"/>
+<path android:fillColor="#FFFFFFFF" android:pathData="M46,48 L54,60 L62,48 L58,47 L54,54 L50,47 Z"/>
+</vector>
+EOF
+else
+  cat >"$d/app/src/main/res/drawable/ic_fg.xml"<<'EOF'
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+<path android:fillColor="#FF052018" android:pathData="M22,63 L77,63 L70,73 L35,73 Z"/>
+<path android:fillColor="#FF052018" android:pathData="M57,38 L77,38 L83,47 L72,47 Z"/>
+<path android:fillColor="#FF052018" android:pathData="M49,47 L60,47 L60,65 L49,65 Z"/>
+<path android:fillColor="#FFFFFFFF" android:pathData="M23,77 C23,68 36,68 36,77 C36,85 23,85 23,77 Z"/>
+<path android:fillColor="#FFFFFFFF" android:pathData="M68,77 C68,68 81,68 81,77 C81,85 68,85 68,77 Z"/>
+</vector>
+EOF
+fi
+cat >"$d/app/src/main/res/drawable/ic.xml"<<'EOF'
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:drawable="@drawable/ic_bg"/>
+<item android:drawable="@drawable/ic_fg"/>
+</layer-list>
 EOF
 cat >"$d/app/src/main/java/$q/MainActivity.java"<<EOF
 package $p;
