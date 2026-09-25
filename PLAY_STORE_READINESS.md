@@ -4,10 +4,10 @@ Estado: **preparación técnica completada; no se ha publicado ninguna app en Go
 
 ## Bloques ya preparados
 
-- VaniDaxi y VaniReparte: **4.0.0**, versionCode **40**.
+- VaniDaxi y VaniReparte: **4.1.0**, versionCode **41**.
 - Compile SDK y target SDK: **36**.
-- APK pública 4.0.0 generada y publicada en GitHub Releases/Pages para distribución directa.
-- AAB 4.0.0 de ambas apps generado y validado.
+- APK pública 4.1.0 generada y publicada en GitHub Releases/Pages para distribución directa.
+- AAB 4.1.0 de ambas apps generado y validado.
 - Workflow de Play conectado al éxito del build público.
 - Firma de subida preparada mediante secrets de GitHub; no se guardan contraseñas en el repositorio.
 - Recurso web de privacidad, términos y solicitud de eliminación de cuenta.
@@ -22,7 +22,7 @@ Estado: **preparación técnica completada; no se ha publicado ninguna app en Go
 5. Completar clasificación de contenido, audiencia, ficha, iconos y capturas.
 6. Facilitar credenciales de prueba válidas a los revisores cuando corresponda.
 7. Cumplir el canal de pruebas requerido por el tipo de cuenta de desarrollador.
-8. Subir los AAB 4.0.0 y pasar la revisión.
+8. Subir los AAB 4.1.0 y pasar la revisión.
 9. Publicar solamente cuando la propietaria lo autorice.
 
-La versión 4.0.0 es la versión objetivo del lanzamiento completo. No se realiza ninguna publicación automática en Play Store.
+La versión 4.1.0 es la versión objetivo del lanzamiento completo. No se realiza ninguna publicación automática en Play Store.
