@@ -73,17 +73,21 @@ jobs:
           NODE
 
       - name: Build VaniDaxi
-        run: gradle --no-daemon --stacktrace -p build/android/VaniDaxi assembleDebug
+        run: gradle --no-daemon --stacktrace -p build/android/VaniDaxi assembleDebug assembleRelease bundleRelease
 
       - name: Build VaniReparte
-        run: gradle --no-daemon --stacktrace -p build/android/VaniReparte assembleDebug
+        run: gradle --no-daemon --stacktrace -p build/android/VaniReparte assembleDebug assembleRelease bundleRelease
 
       - name: Collect APKs
         run: |
           set -euo pipefail
           mkdir -p dist
-          cp build/android/VaniDaxi/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi-1.0.apk
-          cp build/android/VaniReparte/app/build/outputs/apk/debug/app-debug.apk dist/VaniReparte-1.0.apk
+          cp build/android/VaniDaxi/app/build/outputs/apk/debug/app-debug.apk dist/VaniDaxi-1.0-debug.apk
+          cp build/android/VaniReparte/app/build/outputs/apk/debug/app-debug.apk dist/VaniReparte-1.0-debug.apk
+          cp build/android/VaniDaxi/app/build/outputs/apk/release/app-release-unsigned.apk dist/VaniDaxi-1.0-release-unsigned.apk
+          cp build/android/VaniReparte/app/build/outputs/apk/release/app-release-unsigned.apk dist/VaniReparte-1.0-release-unsigned.apk
+          cp build/android/VaniDaxi/app/build/outputs/bundle/release/app-release.aab dist/VaniDaxi-1.0-release-unsigned.aab
+          cp build/android/VaniReparte/app/build/outputs/bundle/release/app-release.aab dist/VaniReparte-1.0-release-unsigned.aab
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
