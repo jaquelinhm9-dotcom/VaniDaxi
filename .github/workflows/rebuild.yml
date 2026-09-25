@@ -66,8 +66,8 @@ jobs:
           for (const file of files) {
             const html = fs.readFileSync(file, "utf8");
             const firstHtmlClose = html.indexOf("</html>");
-            if (firstHtmlClose >= 0 && /<\/?html\b/i.test(html.slice(firstHtmlClose + 7))) throw new Error(\`Contenido HTML después de </html> en \${file}\`);
-            if (!html.includes("VaniAPI")) throw new Error(\`Falta VaniAPI en \${file}\`);
+            if (firstHtmlClose >= 0 && /<\/?html\b/i.test(html.slice(firstHtmlClose + 7))) throw new Error("Contenido HTML después de </html> en "+file);
+            if (!html.includes("VaniAPI")) throw new Error("Falta VaniAPI en "+file);
           }
           console.log("Project structure OK");
           NODE
