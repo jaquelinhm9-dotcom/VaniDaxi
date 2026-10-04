@@ -16,11 +16,10 @@ plugins{ id 'com.android.application' }
 android{ namespace '$p'; compileSdk 36
 defaultConfig{applicationId '$p';minSdk 26;targetSdk 36;versionCode $C;versionName '$V'}
 buildTypes { debug { minifyEnabled false }; release { minifyEnabled false } }
-dependencies { implementation 'androidx.webkit:webkit:1.17.1' }
 compileOptions{sourceCompatibility JavaVersion.VERSION_17;targetCompatibility JavaVersion.VERSION_17}}
 EOF
 cat >"$d/app/src/main/AndroidManifest.xml"<<EOF
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"><uses-permission android:name="android.permission.INTERNET"/><uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/><uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/><application android:theme="@android:style/Theme.Material.Light.NoActionBar" android:label="$label" android:icon="@drawable/ic"><activity android:name=".MainActivity" android:exported="true" android:screenOrientation="portrait"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"><uses-permission android:name="android.permission.INTERNET"/><application android:theme="@android:style/Theme.Material.Light.NoActionBar" android:label="$label" android:icon="@drawable/ic"><activity android:name=".MainActivity" android:exported="true" android:screenOrientation="portrait"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>
 EOF
 cat >"$d/app/src/main/res/drawable/ic_bg.xml"<<EOF
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><corners android:radius="22dp"/><gradient android:angle="135" android:startColor="$a" android:centerColor="$b" android:endColor="$a"/></shape>
@@ -50,12 +49,16 @@ cat >"$d/app/src/main/res/drawable/ic.xml"<<'EOF'
 <item android:drawable="@drawable/ic_fg"/>
 </layer-list>
 EOF
-cat >"$d/app/src/main/java/$q/MainActivity.java"<<EOF
+cat >"$d/app/src/main/java/$q/MainActivity.java"<<'EOF'
 package $p;
-import android.app.*;import android.os.*;import android.webkit.*;import android.Manifest;import android.content.pm.PackageManager;import android.graphics.Color;import android.view.ViewGroup;import androidx.webkit.WebViewAssetLoader;import androidx.webkit.WebViewClientCompat;
-public class MainActivity extends Activity{WebView w;String po;GeolocationPermissions.Callback cb;final int R=12;public void onCreate(Bundle b){super.onCreate(b);w=new WebView(this);WebSettings s=w.getSettings();s.setJavaScriptEnabled(true);s.setDomStorageEnabled(true);s.setAllowFileAccess(false);s.setAllowContentAccess(false);s.setAllowUniversalAccessFromFileURLs(false);s.setAllowFileAccessFromFileURLs(false);s.setGeolocationEnabled(true);final WebViewAssetLoader loader=new WebViewAssetLoader.Builder().addPathHandler("/assets/",new WebViewAssetLoader.AssetsPathHandler(this)).build();w.setWebViewClient(new WebViewClientCompat(){@Override public WebResourceResponse shouldInterceptRequest(WebView v,WebResourceRequest r){return loader.shouldInterceptRequest(r.getUrl());}@Override public WebResourceResponse shouldInterceptRequest(WebView v,String u){return loader.shouldInterceptRequest(android.net.Uri.parse(u));}@Override public void onReceivedError(WebView v,WebResourceRequest r,WebResourceError e){if(r.isForMainFrame()){v.setBackgroundColor(Color.WHITE);v.loadDataWithBaseURL(null,"<html><body style=\"font-family:sans-serif;padding:24px\"><h2>VaniDaxi</h2><p>No se pudo cargar la aplicación. Comprueba tu conexión a Internet y vuelve a abrirla.</p></body></html>","text/html","UTF-8",null);}}});w.setWebChromeClient(new WebChromeClient(){public void onGeolocationPermissionsShowPrompt(String o,GeolocationPermissions.Callback c){if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED||checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_GRANTED)c.invoke(o,true,false);else{po=o;cb=c;requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},R);}}});w.loadUrl("https://appassets.androidplatform.net/assets/www/index.html");setContentView(w,new ViewGroup.LayoutParams(-1,-1));}
-@Override public void onRequestPermissionsResult(int q,String[] p,int[] g){super.onRequestPermissionsResult(q,p,g);if(q==R&&cb!=null){boolean ok=false;for(int x:g)if(x==PackageManager.PERMISSION_GRANTED)ok=true;cb.invoke(po,ok,false);cb=null;po=null;}}
-@Override protected void onDestroy(){if(w!=null)w.destroy();super.onDestroy();}}
+import android.app.*;import android.os.*;import android.webkit.*;import android.graphics.Color;import java.io.*;import java.nio.charset.StandardCharsets;
+public class MainActivity extends Activity{
+  WebView w;
+  private String asset(String p)throws Exception{InputStream in=getAssets().open(p);ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] b=new byte[8192];int n;while((n=in.read(b))!=-1)out.write(b,0,n);in.close();return out.toString(StandardCharsets.UTF_8.name());}
+  private String page()throws Exception{String h=asset("www/index.html");h=h.replace("<script src=\"app-config.js\"></script>","<script>"+asset("www/app-config.js")+"</script>");h=h.replace("<script src=\"supabase-client.js\"></script>","<script>"+asset("www/supabase-client.js")+"</script>");return h;}
+  public void onCreate(Bundle b){super.onCreate(b);w=new WebView(this);WebSettings s=w.getSettings();s.setJavaScriptEnabled(true);s.setDomStorageEnabled(true);s.setAllowFileAccess(false);s.setAllowContentAccess(false);w.setBackgroundColor(Color.WHITE);w.setWebViewClient(new WebViewClient(){@Override public void onReceivedError(WebView v,WebResourceRequest r,WebResourceError e){if(r==null||r.isForMainFrame()){v.loadDataWithBaseURL(null,"<html><body style=\"font-family:sans-serif;padding:24px\"><h2>VaniDaxi</h2><p>No se pudo cargar la aplicación.</p></body></html>","text/html","UTF-8",null);}}});setContentView(w,new android.view.ViewGroup.LayoutParams(-1,-1));try{w.loadDataWithBaseURL("https://appassets.androidplatform.net/assets/www/",page(),"text/html","UTF-8",null);}catch(Exception e){w.loadDataWithBaseURL(null,"<html><body style=\"font-family:sans-serif;padding:24px\"><h2>VaniDaxi</h2><p>Error de carga.</p></body></html>","text/html","UTF-8",null);}}
+  @Override protected void onDestroy(){if(w!=null)w.destroy();super.onDestroy();}
+}
 EOF
 cp "$src/index.html" "$d/app/src/main/assets/www/index.html";cp "$src/app-config.js" "$d/app/src/main/assets/www/app-config.js";cp "$src/supabase-client.js" "$d/app/src/main/assets/www/supabase-client.js";}
 app build/android/VaniDaxi com.vanidaxi.app VaniDaxi web/VaniDaxi "#5B1CFF" "#F046D7"
