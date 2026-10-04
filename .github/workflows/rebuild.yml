@@ -93,7 +93,7 @@ jobs:
       - name: Build VaniDaxi
         run: gradle --no-daemon --stacktrace -p build/android/VaniDaxi assembleDebug assembleRelease bundleRelease
 
-            - name: Collect APKs
+      - name: Collect APKs
         run: |
           set -euo pipefail
           mkdir -p dist
