@@ -32,7 +32,7 @@ function moderationModule(){
   html+='<div class="card" style="margin-top:12px"><h3>Solicitudes Premium</h3>';
   if(premiumRequests.length){
     premiumRequests.forEach(function(p){
-      html+="<div class=\"item\"><div class=\"grow\"><b>"+esc(p.store_name||\"Tienda\")+"</b><div class=\"small\">$"+Number(p.monthly_price||0).toFixed(2)+" al mes · "+esc(p.requested_at||\"\")+"</div></div><button class=\"btn primary\" onclick=\"approvePremium('"+p.seller_id+"',"+Number(p.monthly_price||0)+")\">Aprobar</button></div>";
+      html+='<div class="item"><div class="grow"><b>'+esc(p.store_name||"Tienda")+'</b><div class="small">$'+Number(p.monthly_price||0).toFixed(2)+' al mes · '+esc(p.requested_at||"")+'</div></div><button class="btn primary" onclick="approvePremium(&quot;'+p.seller_id+'&quot;,'+Number(p.monthly_price||0)+')">Aprobar</button></div>';
     });
   }else{
     html+='<div class="small">No hay solicitudes Premium pendientes.</div>';
