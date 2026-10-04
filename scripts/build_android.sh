@@ -49,7 +49,7 @@ cat >"$d/app/src/main/res/drawable/ic.xml"<<'EOF'
 <item android:drawable="@drawable/ic_fg"/>
 </layer-list>
 EOF
-cat >"$d/app/src/main/java/$q/MainActivity.java"<<'EOF'
+cat >"$d/app/src/main/java/$q/MainActivity.java"<<EOF
 package $p;
 import android.app.*;import android.os.*;import android.webkit.*;import android.graphics.Color;import java.io.*;import java.nio.charset.StandardCharsets;
 public class MainActivity extends Activity{
