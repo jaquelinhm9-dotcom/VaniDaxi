@@ -57,7 +57,6 @@ public class MainActivity extends Activity{WebView w;String po;GeolocationPermis
 @Override public void onRequestPermissionsResult(int q,String[] p,int[] g){super.onRequestPermissionsResult(q,p,g);if(q==R&&cb!=null){boolean ok=false;for(int x:g)if(x==PackageManager.PERMISSION_GRANTED)ok=true;cb.invoke(po,ok,false);cb=null;po=null;}}
 @Override protected void onDestroy(){if(w!=null)w.destroy();super.onDestroy();}}
 EOF
-EOF
 cp "$src/index.html" "$d/app/src/main/assets/www/index.html";cp "$src/app-config.js" "$d/app/src/main/assets/www/app-config.js";cp "$src/supabase-client.js" "$d/app/src/main/assets/www/supabase-client.js";}
 app build/android/VaniDaxi com.vanidaxi.app VaniDaxi web/VaniDaxi "#5B1CFF" "#F046D7"
 app build/android/VaniReparte com.vanidaxi.reparte VaniReparte web/VaniReparte "#087E5A" "#20E7A1"
